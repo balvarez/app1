@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout2"
     android:layout_width="match_parent"
@@ -8,8 +8,7 @@
     <RelativeLayout 
         android:id="@+id/top_info"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:layout_height="40dp">
         
         <TextView 
             android:id="@+id/top_name"
@@ -24,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView1"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="24dp"
+        android:layout_marginRight="10dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="2.5" />
@@ -35,5 +34,37 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    
+    <RelativeLayout
+        android:id="@+id/button_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true" >
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/toggle"
+            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/feel"
+            android:clickable="true" />
+        
+        <ImageView
+            android:id="@+id/add_pic"
+            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/camera"
+            android:clickable="true" />
+        
+        <Button
+            android:id="@+id/map_link"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:text="Go To Map" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

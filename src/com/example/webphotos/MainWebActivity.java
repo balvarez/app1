@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.json.*;
 
+import com.example.cuisinestream1.R;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -34,6 +36,8 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -42,51 +46,54 @@ import android.provider.Settings.Secure;
 
 public class MainWebActivity extends Activity {
 	private String currentLocation = "";
-	
-	
+	SeekBar seekbar;
+	TextView txt;
+
+
+
 	private String getURL(int rad) {
-		
+
 		// Acquire a reference to the system Location Manager
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
 		// Define a listener that responds to location updates
 		LocationListener locationListener = new LocationListener() {
-		    public void onLocationChanged(Location location) {
-		      // Called when a new location is found by the network location provider.
-		      currentLocation = String.valueOf(location.getLatitude()) + "+" + String.valueOf(location.getLongitude());
-		    }
+			public void onLocationChanged(Location location) {
+				// Called when a new location is found by the network location provider.
+				currentLocation = String.valueOf(location.getLatitude()) + "+" + String.valueOf(location.getLongitude());
+			}
 
-		    public void onStatusChanged(String provider, int status, Bundle extras) {}
+			public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-		    public void onProviderEnabled(String provider) {}
+			public void onProviderEnabled(String provider) {}
 
-		    public void onProviderDisabled(String provider) {}
-		  };
+			public void onProviderDisabled(String provider) {}
+		};
 
 		// Register the listener with the Location Manager to receive location updates
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-		
+
 		final String android_id = Secure.getString(getBaseContext().getContentResolver(),
-                Secure.ANDROID_ID);
+				Secure.ANDROID_ID);
 		//final String user = "aaa"; //idk how to deal with making users unique right now
 		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
 		return url;
 	}
-	
+
 	private class ListOfRestaurants
 	{
 		public List<RestaurantData> restaurants;
-		
+
 		public ListOfRestaurants()
 		{
 			restaurants = new ArrayList<RestaurantData>();
 		}
-		
+
 		public ListOfRestaurants(List<RestaurantData> data)
 		{
 			restaurants = data;
 		}
-		
+
 		public RestaurantData[] getRestaurantArray()
 		{			
 			RestaurantData[] result;
@@ -99,7 +106,7 @@ public class MainWebActivity extends Activity {
 		}
 	}
 
-	private class RestaurantData
+	protected class RestaurantData
 	{
 		public String id;
 		public String name;
@@ -108,7 +115,7 @@ public class MainWebActivity extends Activity {
 		public double lng;
 		public double distance;
 		public List<String> photos;
-		
+
 		/**
 		 * 
 		 * @param ID
@@ -128,7 +135,7 @@ public class MainWebActivity extends Activity {
 			distance = Distance;
 			photos = Photos;
 		}
-		
+
 		@Override
 		public String toString()
 		{
@@ -223,8 +230,8 @@ public class MainWebActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main_web);
-		
-//		jsonTestRead();
+
+		//		jsonTestRead();
 		new RestaurantInfoTask().execute("http://18.238.2.68/cuisinestream/phonedata.cgi?user=jes&location=42.358506+-71.060142&radius=2000");
 		//activity_main_web comes with only a linearlayout filling the screen with id layout
 		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
@@ -235,6 +242,48 @@ public class MainWebActivity extends Activity {
 		ImageView banner = new ImageView(this);
 		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
 		layout.addView(banner);
+
+		//listen to the distance slider
+		seekbar = (SeekBar)findViewById(R.id.seekbar);
+		txt = (TextView)findViewById(R.id.radius);
+		txt.setText("Set search radius: 100 ft");
+		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int prog,
+					boolean fromUser) {
+				String st="you fucked up";
+				if (prog<=2) {st = "100 ft";}
+				else if (prog>2 && prog<=4) {st = "200 ft";}
+				else if (prog>4 && prog<=6) {st = "350 ft";}
+				else if (prog>6 && prog<=8) {st = "500 ft";}
+				else if (prog>8 && prog<=10) {st = ".1 mile";}
+				else if (prog>10 && prog<=15) {st = ".25 mile";}
+				else if (prog>15 && prog<=20) {st = ".5 mile";}
+				else if (prog>15 && prog<=25) {st = ".75 mile";}
+				else if (prog>25 && prog<=30) {st = "1 mile";}
+				else if (prog>30 && prog<=40) {st = "1.5 miles";}
+				else if (prog>40 && prog<=50) {st = "2 miles";}
+				else if (prog>50 && prog<=60) {st = "2.5 miles";}
+				else if (prog>60 && prog<=72) {st = "3 miles";}
+				else if (prog>72 && prog<=85) {st = "4 miles";}
+				else {st = "5 miles";}
+				//this is pretty ugly but oh well
+				txt.setText("Set search radius: "+st);
+			}
+		});
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
 		ScrollView nearbyRestaurants = new ScrollView(this);
@@ -258,11 +307,20 @@ public class MainWebActivity extends Activity {
 		LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
 
 		//need to differentiate frames. create an ArrayList array. lol
-		//number of restaurants defined by testData.length. need that many copies of imagesFrame
+		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
 		LinearLayout[] imgFramesList = new LinearLayout[testData.length];
 		for (int i=0; i<testData.length; i++) {
 			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
 			restaurant.setLayoutParams(hp); //set height
+			restaurant.setClickable(true);
+			restaurant.setOnClickListener(new Button.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
+//					toPage.putExtra(restaurantData); //send restaurantdata object to next activity
+					startActivity(toPage);
+				}
+			});
 			restaurantsFrame.addView(restaurant); //add scroll to scroll container
 			imgFramesList[i] = new LinearLayout(this); //make frame for scroll
 			restaurant.addView(imgFramesList[i]); //add frame to scroll
