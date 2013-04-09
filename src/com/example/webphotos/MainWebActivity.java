@@ -406,11 +406,10 @@ public class MainWebActivity extends Activity {
 			geoString += "&";
 		}
 		geoString += "z=13";
-		Log.d("goToMapMain string", geoString);
+		//Log.d("goToMapMain string", geoString);
 		Uri geoUri = Uri.parse(geoString);
-		Log.d("goToMapMain uri", geoString);
 		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
-		startActivity(toMapMain);
+		//startActivity(toMapMain);
 	}
 
 	@Override
