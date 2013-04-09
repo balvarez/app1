@@ -28,17 +28,25 @@ public final class R {
         public static final int csbanner=0x7f020004;
         public static final int dessert=0x7f020005;
         public static final int ic_launcher=0x7f020006;
+        public static final int ratingstars=0x7f020007;
+        public static final int star=0x7f020008;
+        public static final int star_empty=0x7f020009;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
-        public static final int layout=0x7f080002;
+        public static final int action_settings=0x7f08000c;
+        public static final int layout=0x7f080006;
         public static final int layout2=0x7f080000;
-        public static final int page1=0x7f080004;
-        public static final int page2=0x7f080005;
-        public static final int pager=0x7f080003;
-        public static final int potato=0x7f080007;
-        public static final int section_label=0x7f080006;
-        public static final int view_pager=0x7f080001;
+        public static final int page1=0x7f080008;
+        public static final int page2=0x7f080009;
+        public static final int pager=0x7f080007;
+        public static final int potato=0x7f08000b;
+        public static final int ratingBar1=0x7f080003;
+        public static final int secondaryProgree=0x01010000;
+        public static final int section_label=0x7f08000a;
+        public static final int textView1=0x7f080004;
+        public static final int top_info=0x7f080001;
+        public static final int top_name=0x7f080002;
+        public static final int view_pager=0x7f080005;
     }
     public static final class layout {
         public static final int activity_flipper=0x7f030000;
@@ -98,5 +106,6 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
+        public static final int foodRatingBar=0x7f060002;
     }
 }
