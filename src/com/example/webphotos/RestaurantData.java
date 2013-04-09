@@ -1,8 +1,9 @@
 package com.example.webphotos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RestaurantData
+public class RestaurantData implements Serializable
 {
 	public String id;
 	public String name;

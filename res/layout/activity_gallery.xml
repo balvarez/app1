@@ -8,25 +8,13 @@
     <RelativeLayout 
         android:id="@+id/top_info"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="30dp">
         
         <TextView 
             android:id="@+id/top_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"/>
-        
-        <RatingBar
-        android:id="@+id/ratingBar1"
-        style="@style/foodRatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:isIndicator="false"
-        android:numStars="5"
-        android:rating="2.5" />
         
     </RelativeLayout>
     
@@ -38,34 +26,32 @@
     <RelativeLayout
         android:id="@+id/button_bar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true" >
 
         <ImageView
             android:id="@+id/toggle"
             android:layout_height="match_parent"
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/feel"
-            android:clickable="true"
-            android:onClick="toggleFF" />
+            android:src="@drawable/feel" />
         
         <ImageView
             android:id="@+id/add_pic"
             android:layout_height="match_parent"
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/camera"
             android:clickable="true"
-            android:onClick="cameraClicked" />
+            android:onClick="cameraClick" />
         
-        <Button
+        <ImageView
             android:id="@+id/map_link"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:text="Go To Map" />
+            android:src="@drawable/tomap" />
 
     </RelativeLayout>
 

@@ -199,32 +199,35 @@ public class MainWebActivity extends Activity {
 		for (int i=0; i<Math.min(restaurants.size(), 5); i++) {
 			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
 			restaurant.setLayoutParams(hp); //set height
-			restaurant.setClickable(true);
-			restaurant.setOnClickListener(new Button.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-//					toPage.putExtra(restaurantData); //send RestaurantData object to next activity
-					toPage.putExtra("tester", "message");
-					startActivity(toPage);
-				}
-			});
 			restaurantsFrame.addView(restaurant); //add scroll to scroll container
 			imgFramesList[i] = new LinearLayout(this); //make frame for scroll
 			restaurant.addView(imgFramesList[i]); //add frame to scroll
 			
 			
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-			RestaurantData currentRestaurant = restaurants.get(i);
+			final RestaurantData currentRestaurant = restaurants.get(i);
 			if(currentRestaurant.photos.size()==0)
 			{
 				//TODO add code to handle if there are no photos 
 			}
 			//TODO: remove this magic number (the 5 below, for max number of photos to add)
+			Resources reso = this.getResources();
 			for (int j=0; j<Math.min(currentRestaurant.photos.size(), 5); j++) {
 				ImageView fillin = new ImageView(this);
 				fillin.setLayoutParams(lp);
+				fillin.setClickable(true);
+				fillin.setOnClickListener(new Button.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
+						toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
+						toPage.putExtra("tester", "message");
+						startActivity(toPage);
+						//this section is not broken
+					}
+				});
 				imgFramesList[i].addView(fillin);
+				fillin.setImageDrawable(reso.getDrawable(R.drawable.loading));
 				new BitmapWorkerTask(fillin).execute(currentRestaurant.photos.get(j));
 			}
 		}
@@ -340,7 +343,6 @@ public class MainWebActivity extends Activity {
 		final Bitmap bitmap = getBitmapFromMemCache(imgKey);
 		if (bitmap != null) imgV.setImageBitmap(bitmap);
 		else {
-			//			imgV.setImageResource(R.drawable.image_placeholder);
 			//TODO pick a placeholder for images that are downloading slowly
 			BitmapWorkerTask task = new BitmapWorkerTask(imgV);
 			task.execute(url);
@@ -377,39 +379,41 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void goToMapMain(View v) {
-		//TODO use actual data here
-		String fakeLat = "42.340148";
-		String fakeLng = "-71.089268";
-		String geoString = "geo:" + fakeLat + "," + fakeLng + ""; //placeholder. fill in with restaurant data sent through intent from Main
-		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
-		//first lat,long is the center. use user location
-		//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
-		//add ?q=... for more pins
-		for(RestaurantData data : listOfRestaurantData.restaurants)
-		{
-			if(geoString.indexOf("?")==-1) //doesnt contain a ?
-			{
-				geoString += "?";
-			}
-			else
-			{
-				geoString += "&";
-			}
-			geoString += "q=" + String.valueOf(data.lat) + "," + String.valueOf(data.lng) + "(" + data.name + ")";
-		}
-		if(geoString.indexOf("?")==-1) //doesnt contain a ?
-		{
-			geoString += "?";
-		}
-		else
-		{
-			geoString += "&";
-		}
-		geoString += "z=13";
-		//Log.d("goToMapMain string", geoString);
-		Uri geoUri = Uri.parse(geoString);
-		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
-		//startActivity(toMapMain);
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+currentLocation.replace("+", ",")));
+		startActivity(browserIntent);
+//		//TODO use actual data here
+//		String fakeLat = "42.340148";
+//		String fakeLng = "-71.089268";
+//		String geoString = "geo:" + fakeLat + "," + fakeLng + ""; //placeholder. fill in with restaurant data sent through intent from Main
+//		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
+//		//first lat,long is the center. use user location
+//		//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
+//		//add ?q=... for more pins
+//		for(RestaurantData data : listOfRestaurantData.restaurants)
+//		{
+//			if(geoString.indexOf("?")==-1) //doesnt contain a ?
+//			{
+//				geoString += "?";
+//			}
+//			else
+//			{
+//				geoString += "&";
+//			}
+//			geoString += "q=" + String.valueOf(data.lat) + "," + String.valueOf(data.lng) + "(" + data.name + ")";
+//		}
+//		if(geoString.indexOf("?")==-1) //doesnt contain a ?
+//		{
+//			geoString += "?";
+//		}
+//		else
+//		{
+//			geoString += "&";
+//		}
+//		geoString += "z=13";
+//		//Log.d("goToMapMain string", geoString);
+//		Uri geoUri = Uri.parse(geoString);
+//		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
+//		//startActivity(toMapMain);
 	}
 
 	@Override

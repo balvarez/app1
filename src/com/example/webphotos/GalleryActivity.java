@@ -2,6 +2,8 @@ package com.example.webphotos;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,34 +24,41 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GalleryActivity extends Activity {
+	RestaurantData restaurant;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
-		String test = intent.getStringExtra("test");
+		String test = intent.getStringExtra("tester");
 		Log.d("intent extra", "received from main: "+test);
-		//		RestaurantData restaurant = intent.get
+		restaurant = (RestaurantData) intent.getSerializableExtra("data");
 		//pass something through the intent coming from the main activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_gallery);
 		DisplayMetrics metrics = new DisplayMetrics();
+		//works to here
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int h = metrics.heightPixels;
+		Log.d("view", "height: "+h);
 		int w = metrics.widthPixels;
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-		viewPager.setLayoutParams(new LinearLayout.LayoutParams(w, h-80));
-		ImagePagerAdapter adapter = new ImagePagerAdapter();
+		viewPager.setLayoutParams(new RelativeLayout.LayoutParams(w, h-70));
+		viewPager.setPageMargin(1);
+		ImagePagerAdapter adapter = new ImagePagerAdapter(restaurant, h);
 		viewPager.setAdapter(adapter);
+		//works to here
 
 		TextView name = (TextView)findViewById(R.id.top_name);
-		//name.setText(restaurant.name);
-		RatingBar stars = (RatingBar)findViewById(R.id.ratingBar1);
-		//stars.setProgress(restaurant.rating*20); //or maybe not *20?
+		name.setText(restaurant.name);
+		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
+//		RatingBar stars = (RatingBar)findViewById(R.id.ratingBar1);
+//		stars.setProgress((int)restaurant.rating); //or maybe not *20?
 
 		//setup for the cache
 		final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
@@ -60,6 +69,7 @@ public class GalleryActivity extends Activity {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
+		//works to here
 	}
 
 	private LruCache<String, Bitmap> mMemoryCache; //instantiate cache
@@ -76,7 +86,7 @@ public class GalleryActivity extends Activity {
 	}
 
 	//probably could package bitmapworkertask and cache and just import them. - not a priority
-	
+
 	//this is the AsyncTask class that handles background download of images
 	private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 		private final WeakReference<ImageView> imageViewRef;
@@ -126,17 +136,24 @@ public class GalleryActivity extends Activity {
 	}
 
 	private class ImagePagerAdapter extends PagerAdapter {
-//		private String[] imgs = restaurant.photos;
-		String[] testpics = {"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
-				"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
-				"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
-				"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
-				"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
-			"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"};
+		//		private String[] imgs = restaurant.photos;
+		//		String[] testpics = {"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
+		//				"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
+		//				"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
+		//				"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
+		//				"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
+		//		"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"};
+		private List<String> pics;
 
+		public ImagePagerAdapter(RestaurantData restaurant, int h) {
+			pics=restaurant.photos;
+			for (int i=0; i<pics.size(); i++) {
+				pics.set(i, pics.get(i).replace("height150", "height"+Integer.toString(h)));
+			} Log.d("view", pics.get(0));
+		}
 		@Override
 		public int getCount() {
-			return testpics.length;
+			return pics.size();
 		}
 
 		@Override
@@ -148,35 +165,48 @@ public class GalleryActivity extends Activity {
 		public Object instantiateItem(ViewGroup container, int pos) {
 			Context context = GalleryActivity.this;
 			ImageView imageView = new ImageView(context);
-			int padding = 30;
+			int padding = 0;
 			imageView.setPadding(padding, padding, padding, padding);
 			imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-			loadBitmap(testpics[pos], imageView);
+			loadBitmap(pics.get(pos), imageView);
 			((ViewPager) container).addView(imageView, 0);
 			return imageView;
 		}
-		
-		private void cameraClicked(View v) {
+
+		private void cameraClick(View v) {
+			Log.d("cameraclick", "add pic clicked");
 			Intent addPhoto = new Intent(GalleryActivity.this, AddPicActivity.class);
 			startActivity(addPhoto);
 		}
-		
-		private void toggleFF(View v) {
-			ImageView toggle = (ImageView)findViewById(R.id.toggle);
-			if (toggle.getDrawable()==getResources().getDrawable(R.drawable.feel)) {
+
+		private String ff = "feel";
+
+		public void toggleFF(View v) {
+			Log.d("foodFeel", "hitButton");
+			ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
+			if (ff.equals("feel"))
+			{
+				Log.d("foodFeel", "switch to food");
+				ff = "food";
 				toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-			} else toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+			}
+			else if (ff.equals("food"))
+			{
+				Log.d("foodFeel", "switch to feel");
+				ff = "feel";
+				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+			}
+			else
+			{
+				Log.d("foodFeel", "wrong!");
+				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+			}
 		}
-		
-		private void goToMapOnePin(View v) {
-			String geoString = ""; //placeholder. fill in with restaurant data sent through intent from Main
-			//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"
-			//first lat,long is the center. use user location
-			//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
-			Uri geoUri = Uri.parse(geoString);
-			Intent toMapOnePin = new Intent(Intent.ACTION_VIEW, geoUri);
-			startActivity(toMapOnePin);
-		}
+
+				private void goToMapOnePin(View v) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+restaurant.lat+","+restaurant.lng));
+					startActivity(browserIntent);
+				}
 
 		@Override
 		public void destroyItem(ViewGroup container, int pos, Object obj) {
