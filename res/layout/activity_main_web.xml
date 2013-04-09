@@ -4,5 +4,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainWebActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/sliderHolder"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentCenter="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+        
+        <TextView
+            android:id="@+id/radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="5 miles" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="100 ft" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/button_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true" >
+
+        <ImageView
+            android:id="@+id/toggle_main"
+            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/feel"
+            android:clickable="true" />
+        
+        <ImageView
+            android:id="@+id/add_pic_main"
+            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/camera"
+            android:clickable="true" />
+        
+        <Button
+            android:id="@+id/map_link_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:text="Go To Map" />
+
+    </RelativeLayout>
 
 </LinearLayout>
