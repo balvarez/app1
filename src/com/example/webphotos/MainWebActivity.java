@@ -72,13 +72,18 @@ public class MainWebActivity extends Activity {
 			public void onProviderDisabled(String provider) {}
 		};
 
+		Log.d("getURL", "set up locationManager and locationListener");
 		// Register the listener with the Location Manager to receive location updates
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		//locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
-		final String android_id = Secure.getString(getBaseContext().getContentResolver(),
-				Secure.ANDROID_ID);
+		Log.d("getURL", "locationManager.requestLocationUpdates");
+		//final String android_id = Secure.getString(getBaseContext().getContentResolver(), Secure.ANDROID_ID);
+		final String android_id = "brian";
+		Log.d("getURL", "android ID: " + android_id);
 		//final String user = "aaa"; //idk how to deal with making users unique right now
-		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
+		//String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
+		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+"42.340148+-71.089268"+"&radius="+rad;
+		Log.d("getURL", "result URL: " + url);
 		return url;
 	}
 
@@ -132,7 +137,7 @@ public class MainWebActivity extends Activity {
 					List<String> photos = new ArrayList<String>();
 					for(int j = 0; j < photosArray.length(); j++)
 					{
-						photos.add(photosArray.getString(i));
+						photos.add(photosArray.getString(j));
 					}
 					restData.restaurants.add(new RestaurantData(id, name, lat, lng, rating, dist, photos));
 				}
@@ -141,6 +146,7 @@ public class MainWebActivity extends Activity {
 				{
 					Log.v("printJSON", data.toString());
 				}
+				updateDisplay(restData);
 			}
 			catch (JSONException e)
 			{
@@ -149,64 +155,11 @@ public class MainWebActivity extends Activity {
 
 		}
 	}
-
-	private LruCache<String, Bitmap> mMemoryCache; //instantiate cache
-
-	//test data
-	String[][] testData = {{"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-	"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg"},
-	{"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
-		"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
-		"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
-	"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"}};
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main_web);
-
-		//		jsonTestRead();
-		new RestaurantInfoTask().execute("http://18.238.2.68/cuisinestream/phonedata.cgi?user=jes&location=42.358506+-71.060142&radius=2000");
-		//activity_main_web has a vertical linearlayout base view
-		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
-
-		//set up banner
-		Resources res = getResources();
-		ImageView banner = (ImageView)findViewById(R.id.bannerSpace);
-		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
-
-		//listen to the distance slider
-		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
-		txt = (TextView)findViewById(R.id.radius);
-		txt.setText("Set search radius: .1 miles");
-		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-			//not used
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int prog, boolean fromUser) {
-				double dist = ((double)prog / 25d) - 1.98; //converts 0 to 100 into about -2 to 2
-				dist = Math.exp(dist);
-				DecimalFormat formatter = new DecimalFormat("##.#");
-				//TODO if we want to, we can convert values < 1 into feet. not priority
-				txt.setText("Set search radius: " + formatter.format(dist) + " miles");
-				//getURL((int)(dist*1609d)); //start getting the URL. takes distance in meters
-			}
-		});
-		//seekbar.incrementProgressBy(1);
+	
+	//be SUPER CAREFUL with calling this. Everything should exist, but this is a hacky way to do it
+	private void updateDisplay(ListOfRestaurants restData)
+	{
+		List<RestaurantData> restaurants = restData.restaurants;
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
 		ScrollView nearbyRestaurants = (ScrollView)findViewById(R.id.nearbyRestaurants);
@@ -233,8 +186,8 @@ public class MainWebActivity extends Activity {
 
 		//need to differentiate frames. create an ArrayList array. lol
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
-		LinearLayout[] imgFramesList = new LinearLayout[testData.length];
-		for (int i=0; i<testData.length; i++) {
+		LinearLayout[] imgFramesList = new LinearLayout[restaurants.size()];
+		for (int i=0; i<restaurants.size(); i++) {
 			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
 			restaurant.setLayoutParams(hp); //set height
 			restaurant.setClickable(true);
@@ -242,7 +195,7 @@ public class MainWebActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-//					toPage.putExtra(restaurantData); //send restaurantdata object to next activity
+//					toPage.putExtra(restaurantData); //send RestaurantData object to next activity
 					toPage.putExtra("tester", "message");
 					startActivity(toPage);
 				}
@@ -250,27 +203,17 @@ public class MainWebActivity extends Activity {
 			restaurantsFrame.addView(restaurant); //add scroll to scroll container
 			imgFramesList[i] = new LinearLayout(this); //make frame for scroll
 			restaurant.addView(imgFramesList[i]); //add frame to scroll
-		}
-
-		//define pic size. should be unnecessary if pictures come in at a specified size
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
-
-		//get an Array or ArrayList of urls. An array would be faster but it might be harder to make
-		//depending on how the server sends restaurant data.
-		//TO-DO tie these together in one loop
-		for (int i=0; i<testData[0].length; i++) {
-			ImageView fillin = new ImageView(this);
-			fillin.setLayoutParams(lp);
-			imgFramesList[0].addView(fillin);
-			new BitmapWorkerTask(fillin).execute(testData[0][i]);
-		}
-
-		//another set of urls to test lag for uncached images. seems not bad
-		for (int i=0; i<testData[1].length; i++) {
-			ImageView fillin = new ImageView(this);
-			fillin.setLayoutParams(lp);
-			imgFramesList[1].addView(fillin);
-			new BitmapWorkerTask(fillin).execute(testData[1][i]);
+			
+			
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
+			RestaurantData currentRestaurant = restaurants.get(i);
+			//TODO: remove this magic number (the 5 below, for max number of photos to add)
+			for (int j=0; j<Math.min(currentRestaurant.photos.size(), 5); j++) {
+				ImageView fillin = new ImageView(this);
+				fillin.setLayoutParams(lp);
+				imgFramesList[i].addView(fillin);
+				new BitmapWorkerTask(fillin).execute(currentRestaurant.photos.get(j));
+			}
 		}
 
 		//setup for the cache
@@ -282,6 +225,75 @@ public class MainWebActivity extends Activity {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
+	}
+
+	private LruCache<String, Bitmap> mMemoryCache; //instantiate cache
+
+	//test data
+	/*
+	String[][] testData = {{"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
+		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
+		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
+		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
+		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
+	"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg"},
+	{"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
+		"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
+		"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
+		"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
+		"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
+	"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"},
+	{"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
+		"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
+		"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
+		"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
+		"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
+	"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"}};
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_main_web);
+
+		//		jsonTestRead();
+		//activity_main_web has a vertical linearlayout base view
+		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
+
+		//set up banner
+		Resources res = getResources();
+		ImageView banner = (ImageView)findViewById(R.id.bannerSpace);
+		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
+
+		//listen to the distance slider
+		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
+		txt = (TextView)findViewById(R.id.radius);
+		txt.setText("Set search radius: .1 miles");
+		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			int slider_position;
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				String URL = getURL(slider_position); //start getting the URL. takes distance in meters
+				new RestaurantInfoTask().execute(URL);
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int prog, boolean fromUser) {
+				double dist = ((double)prog / 25d) - 1.98; //converts 0 to 100 into about -2 to 2
+				dist = Math.exp(dist);
+				DecimalFormat formatter = new DecimalFormat("##.#");
+				//TODO if we want to, we can convert values < 1 into feet. not priority
+				txt.setText("Set search radius: " + formatter.format(dist) + " miles");
+				slider_position = (int)(dist*1609d);
+			}
+		});
+		seekbar.incrementProgressBy(1);
+
 	}
 
 	//cache methods
@@ -337,7 +349,7 @@ public class MainWebActivity extends Activity {
 		if (bitmap != null) imgV.setImageBitmap(bitmap);
 		else {
 			//			imgV.setImageResource(R.drawable.image_placeholder);
-			//TO-DO pick a placeholder for images that are downloading slowly
+			//TODO pick a placeholder for images that are downloading slowly
 			BitmapWorkerTask task = new BitmapWorkerTask(imgV);
 			task.execute(url);
 		}
