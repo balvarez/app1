@@ -13,6 +13,9 @@ import java.util.List;
 
 import org.json.*;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -38,12 +41,35 @@ import android.widget.ScrollView;
 import android.provider.Settings.Secure;
 
 public class MainWebActivity extends Activity {
+	private String currentLocation = "";
 	
-	private String getURL(String loc, int rad) {
+	
+	private String getURL(int rad) {
+		
+		// Acquire a reference to the system Location Manager
+		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+		// Define a listener that responds to location updates
+		LocationListener locationListener = new LocationListener() {
+		    public void onLocationChanged(Location location) {
+		      // Called when a new location is found by the network location provider.
+		      currentLocation = String.valueOf(location.getLatitude()) + "+" + String.valueOf(location.getLongitude());
+		    }
+
+		    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+		    public void onProviderEnabled(String provider) {}
+
+		    public void onProviderDisabled(String provider) {}
+		  };
+
+		// Register the listener with the Location Manager to receive location updates
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		
 		final String android_id = Secure.getString(getBaseContext().getContentResolver(),
                 Secure.ANDROID_ID);
 		//final String user = "aaa"; //idk how to deal with making users unique right now
-		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+loc+"&radius="+rad;
+		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
 		return url;
 	}
 	
@@ -51,7 +77,12 @@ public class MainWebActivity extends Activity {
 	{
 		public List<RestaurantData> restaurants;
 		
-		ListOfRestaurants(List<RestaurantData> data)
+		public ListOfRestaurants()
+		{
+			restaurants = new ArrayList<RestaurantData>();
+		}
+		
+		public ListOfRestaurants(List<RestaurantData> data)
 		{
 			restaurants = data;
 		}
@@ -135,7 +166,7 @@ public class MainWebActivity extends Activity {
 				JSONTokener tokener = new JSONTokener(raw);
 				JSONObject obj1 = (JSONObject) tokener.nextValue();
 				JSONArray keys = obj1.names();
-				List<RestaurantData> restData = new ArrayList<RestaurantData>();
+				ListOfRestaurants restData = new ListOfRestaurants();
 				for(int i = 0; i < keys.length(); i++)
 				{
 					String id = keys.get(i).toString();
@@ -155,10 +186,10 @@ public class MainWebActivity extends Activity {
 					{
 						photos.add(photosArray.getString(i));
 					}
-					restData.add(new RestaurantData(id, name, lat, lng, rating, dist, photos));
+					restData.restaurants.add(new RestaurantData(id, name, lat, lng, rating, dist, photos));
 				}
-				Log.d("parseJSON", String.valueOf(restData.size()));
-				for(RestaurantData data : restData)
+				Log.d("parseJSON", String.valueOf(restData.restaurants.size()));
+				for(RestaurantData data : restData.restaurants)
 				{
 					Log.v("printJSON", data.toString());
 				}
