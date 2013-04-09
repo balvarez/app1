@@ -41,7 +41,7 @@ public final class R {
         public static final int bannerSpace=0x7f08000d;
         public static final int button_bar=0x7f080008;
         public static final int button_bar_main=0x7f080012;
-        public static final int comingsoon=0x7f080000;
+        public static final int comingsoon=0x7f080001;
         public static final int distanceSlide=0x7f08000f;
         public static final int layout=0x7f08000c;
         public static final int layout2=0x7f080002;
@@ -54,7 +54,7 @@ public final class R {
         public static final int potato=0x7f08001a;
         public static final int radius=0x7f080010;
         public static final int ratingBar1=0x7f080005;
-        public static final int sadcamera=0x7f080001;
+        public static final int sadcamera=0x7f080000;
         public static final int secondaryProgree=0x01010000;
         public static final int section_label=0x7f080019;
         public static final int sliderHolder=0x7f08000e;

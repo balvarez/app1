@@ -1,31 +1,32 @@
 package com.example.webphotos;
 
 import java.io.BufferedReader;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v4.util.LruCache;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -34,13 +35,10 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-
-import android.provider.Settings.Secure;
 
 public class MainWebActivity extends Activity {
 	private String currentLocation = "";
@@ -78,68 +76,7 @@ public class MainWebActivity extends Activity {
 		return url;
 	}
 
-	private class ListOfRestaurants
-	{
-		public List<RestaurantData> restaurants;
 
-		public ListOfRestaurants()
-		{
-			restaurants = new ArrayList<RestaurantData>();
-		}
-
-		public ListOfRestaurants(List<RestaurantData> data)
-		{
-			restaurants = data;
-		}
-
-		public RestaurantData[] getRestaurantArray()
-		{			
-			RestaurantData[] result;
-			result = new RestaurantData[restaurants.size()];
-			for(int i = 0; i < restaurants.size(); i++)
-			{
-				result[i] = restaurants.get(i);
-			}
-			return result;
-		}
-	}
-
-	protected class RestaurantData
-	{
-		public String id;
-		public String name;
-		public double rating;
-		public double lat;
-		public double lng;
-		public double distance;
-		public List<String> photos;
-
-		/**
-		 * 
-		 * @param ID
-		 * @param Name
-		 * @param Lat
-		 * @param Lng
-		 * @param Rating
-		 * @param Photos
-		 */
-		public RestaurantData(String ID, String Name, double Lat, double Lng, double Rating, double Distance, List<String> Photos)
-		{
-			id = ID;
-			name = Name;
-			lat = Lat;
-			lng = Lng;
-			rating = Rating;
-			distance = Distance;
-			photos = Photos;
-		}
-
-		@Override
-		public String toString()
-		{
-			return "id: " + id + ", name: " + name + ", #photos: " + String.valueOf(photos.size());
-		}
-	}
 
 	private class RestaurantInfoTask extends AsyncTask<String, Void, String> {
 
@@ -242,44 +179,28 @@ public class MainWebActivity extends Activity {
 		//listen to the distance slider
 		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
 		txt = (TextView)findViewById(R.id.radius);
-		txt.setText("Set search radius: 100 ft");
+		txt.setText("Set search radius: .1 miles");
 		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
+			//not used
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-
 			}
-
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int prog,
-					boolean fromUser) {
-				String st="you fucked up";
-				if (prog<=2) {st = "100 ft";}
-				else if (prog>2 && prog<=4) {st = "200 ft";}
-				else if (prog>4 && prog<=6) {st = "350 ft";}
-				else if (prog>6 && prog<=8) {st = "500 ft";}
-				else if (prog>8 && prog<=10) {st = ".1 mile";}
-				else if (prog>10 && prog<=15) {st = ".25 mile";}
-				else if (prog>15 && prog<=20) {st = ".5 mile";}
-				else if (prog>15 && prog<=25) {st = ".75 mile";}
-				else if (prog>25 && prog<=30) {st = "1 mile";}
-				else if (prog>30 && prog<=40) {st = "1.5 miles";}
-				else if (prog>40 && prog<=50) {st = "2 miles";}
-				else if (prog>50 && prog<=60) {st = "2.5 miles";}
-				else if (prog>60 && prog<=72) {st = "3 miles";}
-				else if (prog>72 && prog<=85) {st = "4 miles";}
-				else {st = "5 miles";}
-				//this is pretty ugly but oh well
-				txt.setText("Set search radius: "+st);
+			public void onProgressChanged(SeekBar seekBar, int prog, boolean fromUser) {
+				double dist = ((double)prog / 25d) - 1.98; //converts 0 to 100 into about -2 to 2
+				dist = Math.exp(dist);
+				DecimalFormat formatter = new DecimalFormat("##.#");
+				//TODO if we want to, we can convert values < 1 into feet. not priority
+				txt.setText("Set search radius: " + formatter.format(dist) + " miles");
+				//getURL((int)(dist*1609d)); //start getting the URL. takes distance in meters
 			}
 		});
+		//seekbar.incrementProgressBy(1);
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
 		ScrollView nearbyRestaurants = (ScrollView)findViewById(R.id.nearbyRestaurants);

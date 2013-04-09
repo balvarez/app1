@@ -2,7 +2,6 @@ package com.example.webphotos;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import com.example.webphotos.MainWebActivity.RestaurantData;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
