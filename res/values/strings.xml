@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WebPhotos</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_side_swipe">SideSwipeActivity</string>
+    <string name="title_activity_swipe_attempt2">SwipeAttempt2</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="title_activity_flipper">FlipperActivity</string>
+    <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="title_activity_restaurant_handler">RestaurantHandler</string>
+
+</resources>

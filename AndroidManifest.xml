@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.webphotos"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="12"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.webphotos.MainWebActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.webphotos.SideSwipeActivity"
+            android:label="@string/title_activity_side_swipe" >
+        </activity>
+        <activity
+            android:name="com.example.webphotos.SwipeAttempt2"
+            android:label="@string/title_activity_swipe_attempt2" >
+        </activity>
+        <activity
+            android:name="com.example.webphotos.FlipperActivity"
+            android:label="@string/title_activity_flipper" >
+        </activity>
+        <activity
+            android:name="com.example.webphotos.GalleryActivity"
+            android:label="@string/title_activity_gallery" >
+        </activity>
+        <activity
+            android:name="com.example.webphotos.RestaurantHandler"
+            android:label="@string/title_activity_restaurant_handler" >
+        </activity>
+    </application>
+
+</manifest>
