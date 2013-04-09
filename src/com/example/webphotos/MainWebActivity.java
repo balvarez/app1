@@ -377,39 +377,41 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void goToMapMain(View v) {
+		/*
 		//TODO use actual data here
 		String fakeLat = "42.340148";
 		String fakeLng = "-71.089268";
-		String geoString = "geo:" + fakeLat + "," + fakeLng + ""; //placeholder. fill in with restaurant data sent through intent from Main
+		//String geoString = "geo:" + fakeLat + "," + fakeLng + "?z=10"; //placeholder. fill in with restaurant data sent through intent from Main
+		String geoString = "geo:?z=10"; //placeholder. fill in with restaurant data sent through intent from Main
 		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
 		//first lat,long is the center. use user location
 		//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
 		//add ?q=... for more pins
+		
+
+		//geoString += "&q=" + String.valueOf(listOfRestaurantData.restaurants.get(1).lat) + "," + String.valueOf(listOfRestaurantData.restaurants.get(1).lng) + "(" + listOfRestaurantData.restaurants.get(1).name + ")";
+		
 		for(RestaurantData data : listOfRestaurantData.restaurants)
 		{
-			if(geoString.indexOf("?")==-1) //doesnt contain a ?
-			{
-				geoString += "?";
-			}
-			else
-			{
-				geoString += "&";
-			}
-			geoString += "q=" + String.valueOf(data.lat) + "," + String.valueOf(data.lng) + "(" + data.name + ")";
+			geoString += "&q=" + String.valueOf(data.get(1).lat) + "," + String.valueOf(data.lng) + "(" + data.name + ")";
 		}
-		if(geoString.indexOf("?")==-1) //doesnt contain a ?
-		{
-			geoString += "?";
-		}
-		else
-		{
-			geoString += "&";
-		}
-		geoString += "z=13";
+		
 		//Log.d("goToMapMain string", geoString);
 		Uri geoUri = Uri.parse(geoString);
 		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
-		//startActivity(toMapMain);
+		startActivity(toMapMain);
+		*/
+		
+		String latitude = String.valueOf(listOfRestaurantData.restaurants.get(0).lat);
+		String longitude = String.valueOf(listOfRestaurantData.restaurants.get(1).lng);
+		String label = listOfRestaurantData.restaurants.get(0).name;
+		String uriBegin = "geo:" + latitude + "," + longitude;
+		String query = latitude + "," + longitude + "(" + label + ")";
+		String encodedQuery = Uri.encode(query);
+		String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
+		Uri uri = Uri.parse(uriString);
+		Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+		startActivity(intent);
 	}
 
 	@Override
