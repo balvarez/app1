@@ -288,7 +288,6 @@ public class MainWebActivity extends Activity {
 		View parent = (View) restaurantsFrame.getParent();
 		Log.d("find error", "resFrame parent: "+parent);
 		nearbyRestaurants.addView(restaurantsFrame);
-		layout.addView(nearbyRestaurants);
 
 		//made each horizontalscrollview clickable instead
 //		//adding a button to test swipe view
