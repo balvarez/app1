@@ -9,7 +9,8 @@
     <ImageView 
         android:id="@+id/bannerSpace"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="60dp"
+        android:src="@drawable/csbanner"/>
     
     <RelativeLayout
         android:id="@+id/sliderHolder"
@@ -54,8 +55,7 @@
     <RelativeLayout
         android:id="@+id/button_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true" >
+        android:layout_height="40dp" >
 
         <ImageView
             android:id="@+id/toggle_main"

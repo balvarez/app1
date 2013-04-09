@@ -12,5 +12,6 @@
     <string name="title_activity_flipper">FlipperActivity</string>
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="title_activity_restaurant_handler">RestaurantHandler</string>
+    <string name="title_activity_add_pic">AddPicActivity</string>
 
 </resources>
