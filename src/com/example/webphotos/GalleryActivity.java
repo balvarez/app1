@@ -29,6 +29,8 @@ public class GalleryActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
+		String test = intent.getStringExtra("test");
+		Log.d("intent extra", "received from main: "+test);
 		//		RestaurantData restaurant = intent.get
 		//pass something through the intent coming from the main activity
 		super.onCreate(savedInstanceState);
@@ -124,11 +126,17 @@ public class GalleryActivity extends Activity {
 	}
 
 	private class ImagePagerAdapter extends PagerAdapter {
-		private String[] imgs = restaurant.photos;
+//		private String[] imgs = restaurant.photos;
+		String[] testpics = {"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
+				"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
+				"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
+				"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
+				"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
+			"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"};
 
 		@Override
 		public int getCount() {
-			return imgs.length;
+			return testpics.length;
 		}
 
 		@Override
@@ -143,7 +151,7 @@ public class GalleryActivity extends Activity {
 			int padding = 30;
 			imageView.setPadding(padding, padding, padding, padding);
 			imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-			loadBitmap(imgs[pos], imageView);
+			loadBitmap(testpics[pos], imageView);
 			((ViewPager) container).addView(imageView, 0);
 			return imageView;
 		}
