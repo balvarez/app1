@@ -13,8 +13,6 @@ import java.util.List;
 
 import org.json.*;
 
-import com.example.cuisinestream1.R;
-
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -234,18 +232,16 @@ public class MainWebActivity extends Activity {
 
 		//		jsonTestRead();
 		new RestaurantInfoTask().execute("http://18.238.2.68/cuisinestream/phonedata.cgi?user=jes&location=42.358506+-71.060142&radius=2000");
-		//activity_main_web comes with only a linearlayout filling the screen with id layout
+		//activity_main_web has a vertical linearlayout base view
 		LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
-		layout.setOrientation(1); //1 is vertical, 0 (default) is horizontal
 
 		//set up banner
 		Resources res = getResources();
-		ImageView banner = new ImageView(this);
+		ImageView banner = (ImageView)findViewById(R.id.bannerSpace);
 		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
-		layout.addView(banner);
 
 		//listen to the distance slider
-		seekbar = (SeekBar)findViewById(R.id.seekbar);
+		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
 		txt = (TextView)findViewById(R.id.radius);
 		txt.setText("Set search radius: 100 ft");
 		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -287,21 +283,24 @@ public class MainWebActivity extends Activity {
 		});
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
-		ScrollView nearbyRestaurants = new ScrollView(this);
+		ScrollView nearbyRestaurants = (ScrollView)findViewById(R.id.nearbyRestaurants);
 		LinearLayout restaurantsFrame = new LinearLayout(this);
 		restaurantsFrame.setOrientation(1);
+		View parent = (View) restaurantsFrame.getParent();
+		Log.d("find error", "resFrame parent: "+parent);
 		nearbyRestaurants.addView(restaurantsFrame);
 		layout.addView(nearbyRestaurants);
 
-		//adding a button to test swipe view
-		Button pressme = new Button(this);
-		layout.addView(pressme);
-		pressme.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-				startActivity(toPage);
-			}
-		});
+		//made each horizontalscrollview clickable instead
+//		//adding a button to test swipe view
+//		Button pressme = new Button(this);
+//		layout.addView(pressme);
+//		pressme.setOnClickListener(new Button.OnClickListener() {
+//			public void onClick(View v) {
+//				Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
+//				startActivity(toPage);
+//			}
+//		});
 
 		//set up horizontal restaurant scrolls
 		final int PREVIEW_HEIGHT = 200; //height of each restaurant preview in scroll
@@ -319,6 +318,7 @@ public class MainWebActivity extends Activity {
 				public void onClick(View v) {
 					Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
 //					toPage.putExtra(restaurantData); //send restaurantdata object to next activity
+					toPage.putExtra("tester", "message");
 					startActivity(toPage);
 				}
 			});
@@ -332,8 +332,7 @@ public class MainWebActivity extends Activity {
 
 		//get an Array or ArrayList of urls. An array would be faster but it might be harder to make
 		//depending on how the server sends restaurant data.
-		//TO-DO get restaurant data from the server and store it in an Array(List). 2D array maybe? Array of
-		//restaurant objects and each object has getters for url/gps/etc?
+		//TO-DO tie these together in one loop
 		for (int i=0; i<testData[0].length; i++) {
 			ImageView fillin = new ImageView(this);
 			fillin.setLayoutParams(lp);
