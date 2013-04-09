@@ -5,10 +5,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class GalleryActivity extends Activity {
 
@@ -17,8 +20,13 @@ public class GalleryActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.activity_gallery);
+	    DisplayMetrics metrics = new DisplayMetrics();
+	    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	    int h = metrics.heightPixels;
+	    int w = metrics.widthPixels;
 
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+	    viewPager.setLayoutParams(new LinearLayout.LayoutParams(w, h-80));
 	    ImagePagerAdapter adapter = new ImagePagerAdapter();
 	    viewPager.setAdapter(adapter);
 	  }

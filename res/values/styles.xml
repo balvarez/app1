@@ -17,10 +17,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
-    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar.Small">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
-        <item name="android:minHeight">22dp</item>
-        <item name="android:maxHeight">22dip</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
     </style>
 
 </resources>
