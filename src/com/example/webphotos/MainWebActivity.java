@@ -74,16 +74,20 @@ public class MainWebActivity extends Activity {
 
 		Log.d("getURL", "set up locationManager and locationListener");
 		// Register the listener with the Location Manager to receive location updates
+		
+		//TODO get this working again to get the location
 		//locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
-		Log.d("getURL", "locationManager.requestLocationUpdates");
+		//Log.d("getURL", "locationManager.requestLocationUpdates");
+		
+		//TODO get this working
 		//final String android_id = Secure.getString(getBaseContext().getContentResolver(), Secure.ANDROID_ID);
 		final String android_id = "brian";
 		Log.d("getURL", "android ID: " + android_id);
 		//final String user = "aaa"; //idk how to deal with making users unique right now
 		//String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
 		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+"42.340148+-71.089268"+"&radius="+rad;
-		Log.d("getURL", "result URL: " + url);
+		//Log.d("getURL", "result URL: " + url);
 		return url;
 	}
 
@@ -167,6 +171,8 @@ public class MainWebActivity extends Activity {
 		restaurantsFrame.setOrientation(1);
 		View parent = (View) restaurantsFrame.getParent();
 		Log.d("find error", "resFrame parent: "+parent);
+
+		nearbyRestaurants.removeAllViews();
 		nearbyRestaurants.addView(restaurantsFrame);
 
 		//made each horizontalscrollview clickable instead
@@ -181,13 +187,14 @@ public class MainWebActivity extends Activity {
 //		});
 
 		//set up horizontal restaurant scrolls
-		final int PREVIEW_HEIGHT = 200; //height of each restaurant preview in scroll
+		final int PREVIEW_HEIGHT = 180; //height of each restaurant preview in scroll
 		LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
 
 		//need to differentiate frames. create an ArrayList array. lol
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
 		LinearLayout[] imgFramesList = new LinearLayout[restaurants.size()];
-		for (int i=0; i<restaurants.size(); i++) {
+		//TODO remove this limiter
+		for (int i=0; i<Math.min(restaurants.size(), 5); i++) {
 			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
 			restaurant.setLayoutParams(hp); //set height
 			restaurant.setClickable(true);
@@ -205,8 +212,12 @@ public class MainWebActivity extends Activity {
 			restaurant.addView(imgFramesList[i]); //add frame to scroll
 			
 			
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			RestaurantData currentRestaurant = restaurants.get(i);
+			if(currentRestaurant.photos.size()==0)
+			{
+				//TODO add code to handle if there are no photos 
+			}
 			//TODO: remove this magic number (the 5 below, for max number of photos to add)
 			for (int j=0; j<Math.min(currentRestaurant.photos.size(), 5); j++) {
 				ImageView fillin = new ImageView(this);
@@ -229,27 +240,6 @@ public class MainWebActivity extends Activity {
 
 	private LruCache<String, Bitmap> mMemoryCache; //instantiate cache
 
-	//test data
-	/*
-	String[][] testData = {{"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-		"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg",
-	"http://images4.fanpop.com/image/photos/18400000/pickle-delivery-pickles-18401263-373-500.jpg"},
-	{"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
-		"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
-		"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
-	"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"},
-	{"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRFknsdZDTESSTWImcDDcx_-NR0WXriUbW7VSxLkatioTwm3tWe",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_04_vector_156273.jpg",
-		"http://images.all-free-download.com/images/graphicmedium/fast_food_06_vector_156271.jpg",
-		"http://www.camillesdish.com/wp-content/uploads/et_temp/IMG_1721-455568_200x200.jpg",
-		"http://www.stopfoodborneillness.org/sites/default/files/images/1food.jpg",
-	"http://neworleanslocal.com/wp-content/uploads/2012/05/fresh-produce-200x200.jpg"}};
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -355,19 +345,36 @@ public class MainWebActivity extends Activity {
 		}
 	}
 	
-	private void cameraClicked(View v) {
+	public void cameraClicked(View v) {
 		Intent addPhoto = new Intent(MainWebActivity.this, AddPicActivity.class);
 		startActivity(addPhoto);
 	}
 	
-	private void toggleFF(View v) {
+	private String ff = "feel";
+	
+	public void toggleFF(View v) {
+		Log.d("foodFeel", "hitButton");
 		ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
-		if (toggle.getDrawable()==getResources().getDrawable(R.drawable.feel)) {
+		if (ff.equals("feel"))
+		{
+			Log.d("foodFeel", "switch to food");
+			ff = "food";
 			toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-		} else toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+		}
+		else if (ff.equals("food"))
+		{
+			Log.d("foodFeel", "switch to feel");
+			ff = "feel";
+			toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+		}
+		else
+			{
+				Log.d("foodFeel", "wrong!");
+				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+			}
 	}
 	
-	private void goToMapMain(View v) {
+	public void goToMapMain(View v) {
 		String geoString = ""; //placeholder. fill in with restaurant data sent through intent from Main
 		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
 		//first lat,long is the center. use user location
