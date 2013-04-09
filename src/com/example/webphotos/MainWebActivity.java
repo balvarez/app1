@@ -50,6 +50,7 @@ public class MainWebActivity extends Activity {
 	private String currentLocation = "";
 	SeekBar seekbar;
 	TextView txt;
+	ListOfRestaurants listOfRestaurantData;
 
 
 
@@ -150,6 +151,7 @@ public class MainWebActivity extends Activity {
 				{
 					Log.v("printJSON", data.toString());
 				}
+				listOfRestaurantData = restData;
 				updateDisplay(restData);
 			}
 			catch (JSONException e)
@@ -375,12 +377,38 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void goToMapMain(View v) {
-		String geoString = ""; //placeholder. fill in with restaurant data sent through intent from Main
+		//TODO use actual data here
+		String fakeLat = "42.340148";
+		String fakeLng = "-71.089268";
+		String geoString = "geo:" + fakeLat + "," + fakeLng + ""; //placeholder. fill in with restaurant data sent through intent from Main
 		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
 		//first lat,long is the center. use user location
 		//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
 		//add ?q=... for more pins
+		for(RestaurantData data : listOfRestaurantData.restaurants)
+		{
+			if(geoString.indexOf("?")==-1) //doesnt contain a ?
+			{
+				geoString += "?";
+			}
+			else
+			{
+				geoString += "&";
+			}
+			geoString += "q=" + String.valueOf(data.lat) + "," + String.valueOf(data.lng) + "(" + data.name + ")";
+		}
+		if(geoString.indexOf("?")==-1) //doesnt contain a ?
+		{
+			geoString += "?";
+		}
+		else
+		{
+			geoString += "&";
+		}
+		geoString += "z=13";
+		Log.d("goToMapMain string", geoString);
 		Uri geoUri = Uri.parse(geoString);
+		Log.d("goToMapMain uri", geoString);
 		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
 		startActivity(toMapMain);
 	}
