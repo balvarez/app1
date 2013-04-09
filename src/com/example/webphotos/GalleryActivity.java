@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
@@ -154,6 +155,28 @@ public class GalleryActivity extends Activity {
 			loadBitmap(testpics[pos], imageView);
 			((ViewPager) container).addView(imageView, 0);
 			return imageView;
+		}
+		
+		private void cameraClicked(View v) {
+			Intent addPhoto = new Intent(GalleryActivity.this, AddPicActivity.class);
+			startActivity(addPhoto);
+		}
+		
+		private void toggleFF(View v) {
+			ImageView toggle = (ImageView)findViewById(R.id.toggle);
+			if (toggle.getDrawable()==getResources().getDrawable(R.drawable.feel)) {
+				toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
+			} else toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+		}
+		
+		private void goToMapOnePin(View v) {
+			String geoString = ""; //placeholder. fill in with restaurant data sent through intent from Main
+			//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"
+			//first lat,long is the center. use user location
+			//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
+			Uri geoUri = Uri.parse(geoString);
+			Intent toMapOnePin = new Intent(Intent.ACTION_VIEW, geoUri);
+			startActivity(toMapOnePin);
 		}
 
 		@Override

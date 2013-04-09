@@ -16,6 +16,7 @@ import org.json.*;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -414,6 +415,29 @@ public class MainWebActivity extends Activity {
 			BitmapWorkerTask task = new BitmapWorkerTask(imgV);
 			task.execute(url);
 		}
+	}
+	
+	private void cameraClicked(View v) {
+		Intent addPhoto = new Intent(MainWebActivity.this, AddPicActivity.class);
+		startActivity(addPhoto);
+	}
+	
+	private void toggleFF(View v) {
+		ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
+		if (toggle.getDrawable()==getResources().getDrawable(R.drawable.feel)) {
+			toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
+		} else toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+	}
+	
+	private void goToMapMain(View v) {
+		String geoString = ""; //placeholder. fill in with restaurant data sent through intent from Main
+		//geoString should be like "geo:<lat>,<long>?q=<lat>,<long>(Label+Name)&z=<zoom>"  (& might be ?, not sure)
+		//first lat,long is the center. use user location
+		//second lat, long is the pin location. (L+N) is the label on the pin. zoom is zoom, something like 17 is probably good? (max 23)
+		//add ?q=... for more pins
+		Uri geoUri = Uri.parse(geoString);
+		Intent toMapMain = new Intent(Intent.ACTION_VIEW, geoUri);
+		startActivity(toMapMain);
 	}
 
 	@Override
