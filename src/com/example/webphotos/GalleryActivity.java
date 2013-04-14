@@ -57,8 +57,8 @@ public class GalleryActivity extends Activity {
 		TextView name = (TextView)findViewById(R.id.top_name);
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
-//		RatingBar stars = (RatingBar)findViewById(R.id.ratingBar1);
-//		stars.setProgress((int)restaurant.rating); //or maybe not *20?
+		//		RatingBar stars = (RatingBar)findViewById(R.id.ratingBar1);
+		//		stars.setProgress((int)restaurant.rating); //or maybe not *20?
 
 		//setup for the cache
 		final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
@@ -173,12 +173,6 @@ public class GalleryActivity extends Activity {
 			return imageView;
 		}
 
-		private void cameraClick(View v) {
-			Log.d("cameraclick", "add pic clicked");
-			Intent addPhoto = new Intent(GalleryActivity.this, AddPicActivity.class);
-			startActivity(addPhoto);
-		}
-
 		private String ff = "feel";
 
 		public void toggleFF(View v) {
@@ -203,15 +197,22 @@ public class GalleryActivity extends Activity {
 			}
 		}
 
-				private void goToMapOnePin(View v) {
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+restaurant.lat+","+restaurant.lng));
-					startActivity(browserIntent);
-				}
-
 		@Override
 		public void destroyItem(ViewGroup container, int pos, Object obj) {
 			((ViewPager)container).removeView((ImageView)obj);
 		}
+	}
+
+	public void cameraClick(View v) {
+		Log.d("cameraclick", "add pic clicked");
+		Intent addPic = new Intent(GalleryActivity.this, AddPicActivity.class);
+		v.getContext().startActivity(addPic);
+	}
+
+	public void goToMapOnePin(View v) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+restaurant.lat+","+restaurant.lng));
+		Log.d("debuf", "intent created");
+		v.getContext().startActivity(browserIntent);
 	}
 
 }
