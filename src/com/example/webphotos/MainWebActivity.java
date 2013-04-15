@@ -14,6 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,6 +36,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v4.util.LruCache;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -45,6 +49,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainWebActivity extends Activity {
 	private String currentLocation = "";
@@ -54,40 +59,42 @@ public class MainWebActivity extends Activity {
 
 
 
-	private String getURL(int rad) {
-
-		// Acquire a reference to the system Location Manager
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-		// Define a listener that responds to location updates
-		LocationListener locationListener = new LocationListener() {
-			public void onLocationChanged(Location location) {
-				// Called when a new location is found by the network location provider.
-				currentLocation = String.valueOf(location.getLatitude()) + "+" + String.valueOf(location.getLongitude());
-			}
-
-			public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-			public void onProviderEnabled(String provider) {}
-
-			public void onProviderDisabled(String provider) {}
-		};
-
-		Log.d("getURL", "set up locationManager and locationListener");
-		// Register the listener with the Location Manager to receive location updates
+	private String getURL(int rad) throws NoLocationException {
+		Geocoder geocoder;
+		String bestProvider;
+		List<Address> user = null;
+		double lat;
+		double lng;
+		String currentLocation = "";
 		
-		//TODO get this working again to get the location
-		//locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
-		//Log.d("getURL", "locationManager.requestLocationUpdates");
+		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
-		//TODO get this working
-		//final String android_id = Secure.getString(getBaseContext().getContentResolver(), Secure.ANDROID_ID);
-		final String android_id = "brian";
+		Criteria criteria = new Criteria();
+		bestProvider = lm.getBestProvider(criteria, false);
+		Location location = lm.getLastKnownLocation(bestProvider);
+		
+		if (location == null){
+			Toast.makeText(this,"Location Not found, please try again shortly",Toast.LENGTH_LONG).show();
+			throw new NoLocationException("location not found");
+		}else{
+			geocoder = new Geocoder(this);
+		    try {
+		        user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+		    lat=(double)user.get(0).getLatitude();
+		    lng=(double)user.get(0).getLongitude();
+		    currentLocation = lat + "," + lng;
+		    
+		    }catch (Exception e) {
+		    	e.printStackTrace();
+		    }
+		}
+		
+		TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		final String android_id = telephonyManager1.getDeviceId();
 		Log.d("getURL", "android ID: " + android_id);
-		//final String user = "aaa"; //idk how to deal with making users unique right now
-		//String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
-		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+"42.340148+-71.089268"+"&radius="+rad;
+		Log.d("getURL", "location: " + currentLocation);
+		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
+		//String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+"42.340148+-71.089268"+"&radius="+rad;
 		//Log.d("getURL", "result URL: " + url);
 		return url;
 	}
@@ -269,8 +276,14 @@ public class MainWebActivity extends Activity {
 			int slider_position;
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				String URL = getURL(slider_position); //start getting the URL. takes distance in meters
-				new RestaurantInfoTask().execute(URL);
+				try{
+					String URL = getURL(slider_position); //start getting the URL. takes distance in meters
+					new RestaurantInfoTask().execute(URL);
+				}
+				catch(NoLocationException e)
+				{
+					
+				}
 			}
 			
 			@Override
