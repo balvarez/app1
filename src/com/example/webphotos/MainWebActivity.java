@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -61,12 +62,8 @@ public class MainWebActivity extends Activity {
 
 
 	private String getURL(int rad) throws NoLocationException {
-		Geocoder geocoder;
-		String bestProvider;
-		List<Address> user = null;
-		double lat;
-		double lng;
 		String currentLocation = "";
+<<<<<<< HEAD
 		
 		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -88,15 +85,49 @@ public class MainWebActivity extends Activity {
 		    }catch (Exception e) {
 		    	e.printStackTrace();
 		    }
+=======
+		final String android_id;
+		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
+		{
+			Geocoder geocoder;
+			String bestProvider;
+			List<Address> user = null;
+			double lat;
+			double lng;
+			LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+			Criteria criteria = new Criteria();
+			bestProvider = lm.getBestProvider(criteria, false);
+			Location location = lm.getLastKnownLocation(bestProvider);
+			
+			if (location == null){
+				Toast.makeText(this,"Location Not found, please try again shortly",Toast.LENGTH_LONG).show();
+				throw new NoLocationException("location not found");
+			}else{
+				geocoder = new Geocoder(this);
+			    try {
+			        user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+			    lat=(double)user.get(0).getLatitude();
+			    lng=(double)user.get(0).getLongitude();
+			    currentLocation = lat + "+" + lng;
+			    
+			    }catch (Exception e) {
+			    	e.printStackTrace();
+			    }
+			}
+			TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+			android_id = telephonyManager1.getDeviceId();
 		}
+		else //we are in debug mode, and should return spoofed values
+		{
+			android_id = "debug";
+			currentLocation = "42.340148+-71.089268";
+>>>>>>> e6dbb28d24e0f461f1b9087f1b533fe1803b479f
+		}
+
 		
-		TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		final String android_id = telephonyManager1.getDeviceId();
 		Log.d("getURL", "android ID: " + android_id);
 		Log.d("getURL", "location: " + currentLocation);
 		String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+currentLocation+"&radius="+rad;
-		//String url = "http://18.238.2.68/cuisinestream/phonedata.cgi?user="+android_id+"&location="+"42.340148+-71.089268"+"&radius="+rad;
-		//Log.d("getURL", "result URL: " + url);
 		return url;
 	}
 
