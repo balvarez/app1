@@ -3,8 +3,9 @@ package com.example.webphotos;
 import java.io.Serializable;
 import java.util.List;
 
-public class RestaurantData implements Serializable
+public class RestaurantData implements Serializable, Comparable<RestaurantData>
 {
+	private static final long serialVersionUID = -6205813922364353421L;
 	public String id;
 	public String name;
 	public double rating;
@@ -37,5 +38,10 @@ public class RestaurantData implements Serializable
 	public String toString()
 	{
 		return "id: " + id + ", name: " + name + ", #photos: " + String.valueOf(photos.size());
+	}
+
+	@Override
+	public int compareTo(RestaurantData o) {
+		return (int)(100*(distance - o.distance));
 	}
 }
