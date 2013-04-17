@@ -1,9 +1,10 @@
 package com.example.webphotos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListOfRestaurants
+public class ListOfRestaurants implements Serializable
 {
 	public List<RestaurantData> restaurants;
 

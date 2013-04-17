@@ -16,6 +16,13 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"/>
         
+        <RatingBar 
+            android:id="@+id/galRestRating"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/foodRatingBar"
+            android:numStars="5"/>
+        
     </RelativeLayout>
     
     <android.support.v4.view.ViewPager
@@ -29,13 +36,13 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true" >
 
-        <ImageView
-            android:id="@+id/toggle"
-            android:layout_height="match_parent"
-            android:layout_width="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/feel" />
+<!--         <ImageView -->
+<!--             android:id="@+id/toggle" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_width="60dp" -->
+<!--             android:layout_alignParentLeft="true" -->
+<!--             android:layout_alignParentTop="true" -->
+<!--             android:src="@drawable/feel" /> -->
         
         <ImageView
             android:id="@+id/add_pic"

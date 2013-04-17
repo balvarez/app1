@@ -121,14 +121,10 @@ public class MainWebActivity extends Activity {
 			String rawData="";
 			try {
 				URL url = new URL(arg0[0]);
-				//Log.d("reader", "1");
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-				//Log.d("reader", "2");
 				String inputLine;
 				while((inputLine=in.readLine())!=null) {rawData=inputLine;}
-				//Log.d("reader", "3");
 				in.close();
-				//Log.d("reader", "rawData = "+rawData);
 			} catch (Exception e) {
 				Log.e("Error", e.getMessage());
 				e.printStackTrace();
@@ -188,8 +184,8 @@ public class MainWebActivity extends Activity {
 		ScrollView nearbyRestaurants = (ScrollView)findViewById(R.id.nearbyRestaurants);
 		LinearLayout restaurantsFrame = new LinearLayout(this);
 		restaurantsFrame.setOrientation(1);
-		View parent = (View) restaurantsFrame.getParent();
-		Log.d("find error", "resFrame parent: "+parent);
+//		View parent = (View) restaurantsFrame.getParent();
+//		Log.d("find error", "resFrame parent: "+parent);
 
 		nearbyRestaurants.removeAllViews();
 		nearbyRestaurants.addView(restaurantsFrame);
@@ -389,50 +385,36 @@ public class MainWebActivity extends Activity {
 	
 	public void cameraClicked(View v) {
 		Intent addPhoto = new Intent(MainWebActivity.this, AddPicActivity.class);
+		addPhoto.putExtra("restaurantList", listOfRestaurantData);
 		startActivity(addPhoto);
 	}
 	
-	private String ff = "feel";
-	
-	public void toggleFF(View v) {
-		Log.d("foodFeel", "hitButton");
-		ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
-		if (ff.equals("feel"))
-		{
-			Log.d("foodFeel", "switch to food");
-			ff = "food";
-			toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-		}
-		else if (ff.equals("food"))
-		{
-			Log.d("foodFeel", "switch to feel");
-			ff = "feel";
-			toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-		}
-		else
-			{
-				Log.d("foodFeel", "wrong!");
-				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-			}
-	}
+//	private String ff = "feel";
+//	
+//	public void toggleFF(View v) {
+//		Log.d("foodFeel", "hitButton");
+//		ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
+//		if (ff.equals("feel"))
+//		{
+//			Log.d("foodFeel", "switch to food");
+//			ff = "food";
+//			toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
+//		}
+//		else if (ff.equals("food"))
+//		{
+//			Log.d("foodFeel", "switch to feel");
+//			ff = "feel";
+//			toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+//		}
+//		else
+//			{
+//				Log.d("foodFeel", "wrong!");
+//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+//			}
+//	}
 	
 	public void goToMapMain(View v) {
-		/*
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:"+42.340148/1E6 +"," + -71.089268/1E6));
-		//Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+currentLocation.replace("+", ",")));
-		startActivity(browserIntent);
-		String latitude = String.valueOf(listOfRestaurantData.restaurants.get(0).lat);
-		String longitude = String.valueOf(listOfRestaurantData.restaurants.get(1).lng);
-		String label = listOfRestaurantData.restaurants.get(0).name;
-		String uriBegin = "geo:" + latitude + "," + longitude;
-		String query = latitude + "," + longitude + "(" + label + ")";
-		String encodedQuery = Uri.encode(query);
-		String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
-		Uri uri = Uri.parse(uriString);
-		Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-		*/
-		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,72.60040283203125 (Maninagar)");
+		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,-72.60040283203125 (Maninagar)");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 	}

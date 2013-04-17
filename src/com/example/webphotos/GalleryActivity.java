@@ -57,8 +57,8 @@ public class GalleryActivity extends Activity {
 		TextView name = (TextView)findViewById(R.id.top_name);
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
-		//		RatingBar stars = (RatingBar)findViewById(R.id.ratingBar1);
-		//		stars.setProgress((int)restaurant.rating); //or maybe not *20?
+		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
+		stars.setProgress((int)restaurant.rating);
 
 		//setup for the cache
 		final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
@@ -173,29 +173,29 @@ public class GalleryActivity extends Activity {
 			return imageView;
 		}
 
-		private String ff = "feel";
-
-		public void toggleFF(View v) {
-			Log.d("foodFeel", "hitButton");
-			ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
-			if (ff.equals("feel"))
-			{
-				Log.d("foodFeel", "switch to food");
-				ff = "food";
-				toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-			}
-			else if (ff.equals("food"))
-			{
-				Log.d("foodFeel", "switch to feel");
-				ff = "feel";
-				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-			}
-			else
-			{
-				Log.d("foodFeel", "wrong!");
-				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-			}
-		}
+//		private String ff = "feel";
+//
+//		public void toggleFF(View v) {
+//			Log.d("foodFeel", "hitButton");
+//			ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
+//			if (ff.equals("feel"))
+//			{
+//				Log.d("foodFeel", "switch to food");
+//				ff = "food";
+//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
+//			}
+//			else if (ff.equals("food"))
+//			{
+//				Log.d("foodFeel", "switch to feel");
+//				ff = "feel";
+//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+//			}
+//			else
+//			{
+//				Log.d("foodFeel", "wrong!");
+//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
+//			}
+//		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int pos, Object obj) {
@@ -206,6 +206,7 @@ public class GalleryActivity extends Activity {
 	public void cameraClick(View v) {
 		Log.d("cameraclick", "add pic clicked");
 		Intent addPic = new Intent(GalleryActivity.this, AddPicActivity.class);
+		addPic.putExtra("restaurant", restaurant);
 		v.getContext().startActivity(addPic);
 	}
 

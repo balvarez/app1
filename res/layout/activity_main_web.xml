@@ -58,15 +58,15 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" >
 
-        <ImageView
-            android:id="@+id/toggle_main"
-            android:layout_height="match_parent"
-            android:layout_width="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/feel"
-            android:clickable="true"
-            android:onClick="toggleFF" />
+<!--         <ImageView -->
+<!--             android:id="@+id/toggle_main" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_width="60dp" -->
+<!--             android:layout_alignParentLeft="true" -->
+<!--             android:layout_alignParentTop="true" -->
+<!--             android:src="@drawable/feel" -->
+<!--             android:clickable="true" -->
+<!--             android:onClick="toggleFF" /> -->
         
         <ImageView
             android:id="@+id/add_pic_main"
