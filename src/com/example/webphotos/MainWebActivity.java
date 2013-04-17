@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.R.color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -27,9 +28,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -224,6 +227,7 @@ public class MainWebActivity extends Activity {
 			info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
 			info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			info.setPadding(0, -4, 0, 0);
+			info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
 			imgFramesList[i].addView(info);
 			if(currentRestaurant.photos.size()==0)
 			{
@@ -413,6 +417,7 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void goToMapMain(View v) {
+		/*
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:"+42.340148/1E6 +"," + -71.089268/1E6));
 		//Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+currentLocation.replace("+", ",")));
 		startActivity(browserIntent);
@@ -426,6 +431,10 @@ public class MainWebActivity extends Activity {
 		Uri uri = Uri.parse(uriString);
 		Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
 		startActivity(intent);
+		*/
+		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,72.60040283203125 (Maninagar)");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
 
 	}
 
