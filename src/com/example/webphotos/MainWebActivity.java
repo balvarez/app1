@@ -435,7 +435,6 @@ public class MainWebActivity extends Activity {
 		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,72.60040283203125 (Maninagar)");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
-
 	}
 
 	@Override
