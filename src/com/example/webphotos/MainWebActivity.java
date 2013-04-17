@@ -220,8 +220,10 @@ public class MainWebActivity extends Activity {
 			
 			
 			final RestaurantData currentRestaurant = restaurants.get(i);
-			info.setText(currentRestaurant.name+"    "+currentRestaurant.distance/1609d+" miles");
+			DecimalFormat twoDForm = new DecimalFormat("#.##");
+			info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
 			info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			info.setPadding(0, -4, 0, 0);
 			imgFramesList[i].addView(info);
 			if(currentRestaurant.photos.size()==0)
 			{
