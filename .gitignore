@@ -1,6 +1,7 @@
 *.class
+bin/classes.dex
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear

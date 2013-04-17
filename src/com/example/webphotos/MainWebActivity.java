@@ -47,6 +47,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -172,7 +173,6 @@ public class MainWebActivity extends Activity {
 			{
 				e.printStackTrace();
 			}
-
 		}
 	}
 	
@@ -204,31 +204,39 @@ public class MainWebActivity extends Activity {
 
 		//set up horizontal restaurant scrolls
 		final int PREVIEW_HEIGHT = 180; //height of each restaurant preview in scroll
-		LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
 
 		//need to differentiate frames. create an ArrayList array. lol
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
-		LinearLayout[] imgFramesList = new LinearLayout[restaurants.size()];
+		RelativeLayout[] imgFramesList = new RelativeLayout[restaurants.size()];
 		//TODO remove this limiter
 		for (int i=0; i<Math.min(restaurants.size(), 5); i++) {
 			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
-			restaurant.setLayoutParams(hp); //set height
+			restaurant.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT)); //set height
 			restaurantsFrame.addView(restaurant); //add scroll to scroll container
-			imgFramesList[i] = new LinearLayout(this); //make frame for scroll
+			imgFramesList[i] = new RelativeLayout(this); //make frame for scroll
+			imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT));
 			restaurant.addView(imgFramesList[i]); //add frame to scroll
+			TextView info = new TextView(this); //make view for name/distance
 			
 			
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			final RestaurantData currentRestaurant = restaurants.get(i);
+			info.setText(currentRestaurant.name+"    "+currentRestaurant.distance/1609d+" miles");
+			info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			imgFramesList[i].addView(info);
 			if(currentRestaurant.photos.size()==0)
 			{
 				//TODO add code to handle if there are no photos 
 			}
 			//TODO: remove this magic number (the 5 below, for max number of photos to add)
 			Resources reso = this.getResources();
+			int previousPic = 0;
 			for (int j=0; j<Math.min(currentRestaurant.photos.size(), 5); j++) {
 				ImageView fillin = new ImageView(this);
-				fillin.setLayoutParams(lp);
+				RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
+				if (previousPic != 0) {
+					imgParams.addRule(RelativeLayout.RIGHT_OF, previousPic);
+				}
+				fillin.setLayoutParams(imgParams);
 				fillin.setClickable(true);
 				fillin.setOnClickListener(new Button.OnClickListener() {
 					@Override
@@ -243,7 +251,11 @@ public class MainWebActivity extends Activity {
 				imgFramesList[i].addView(fillin);
 				fillin.setImageDrawable(reso.getDrawable(R.drawable.loading));
 				new BitmapWorkerTask(fillin).execute(currentRestaurant.photos.get(j));
+				fillin.setId(1000+j);
+				previousPic = fillin.getId();
+				Log.d("id printer", "fillin id: "+previousPic);
 			}
+			imgFramesList[i].bringChildToFront(info);
 		}
 
 		//setup for the cache
