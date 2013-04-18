@@ -133,6 +133,12 @@ public class AddPicActivity extends Activity {
 		}
 	}
 	
+	private void submitButton() {
+		//sendToServer();
+		Intent home = new Intent(AddPicActivity.this, MainWebActivity.class);
+		startActivity(home);
+	}
+	
 	private void sendToServer() {
 		double rating = stars.getRating();
 		String name = restaurant.name;

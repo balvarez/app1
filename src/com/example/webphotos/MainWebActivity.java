@@ -208,12 +208,12 @@ public class MainWebActivity extends Activity {
 				DecimalFormat twoDForm = new DecimalFormat("#.##");
 				info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
 				info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-				info.setPadding(0, -4, 0, 0);
+				info.setPadding(0, -10, 0, 0);
 				info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
 				imgFramesList[i].addView(info);
 				if(currentRestaurant.photos.size()==0)
 				{
-					//TODO add code to handle if there are no photos 
+					continue; //no photos? skip the restaurant
 				}
 				Resources reso = this.getResources();
 				int previousPic = 0;

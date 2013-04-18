@@ -27,16 +27,15 @@ public final class R {
         public static final int candy=0x7f020003;
         public static final int chicken=0x7f020004;
         public static final int csbanner=0x7f020005;
-        public static final int csbanner_old=0x7f020006;
-        public static final int dessert=0x7f020007;
-        public static final int feel=0x7f020008;
-        public static final int food=0x7f020009;
-        public static final int ic_launcher=0x7f02000a;
-        public static final int loading=0x7f02000b;
-        public static final int ratingstars=0x7f02000c;
-        public static final int star=0x7f02000d;
-        public static final int star_empty=0x7f02000e;
-        public static final int tomap=0x7f02000f;
+        public static final int dessert=0x7f020006;
+        public static final int feel=0x7f020007;
+        public static final int food=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int loading=0x7f02000a;
+        public static final int ratingstars=0x7f02000b;
+        public static final int star=0x7f02000c;
+        public static final int star_empty=0x7f02000d;
+        public static final int tomap=0x7f02000e;
     }
     public static final class id {
         public static final int action_settings=0x7f08001e;
@@ -61,7 +60,7 @@ public final class R {
         public static final int page2=0x7f08001b;
         public static final int pager=0x7f080019;
         public static final int picActivityBanner=0x7f080000;
-        public static final int picToMap=0x7f080006;
+        public static final int picSubmit=0x7f080006;
         public static final int potato=0x7f08001d;
         public static final int radius=0x7f080014;
         public static final int restRating=0x7f080003;
