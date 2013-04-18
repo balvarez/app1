@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -133,7 +134,7 @@ public class AddPicActivity extends Activity {
 		}
 	}
 	
-	private void submitButton() {
+	private void submitButton(View v) {
 		//sendToServer();
 		Intent home = new Intent(AddPicActivity.this, MainWebActivity.class);
 		startActivity(home);

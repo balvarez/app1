@@ -53,6 +53,8 @@ public class MainWebActivity extends Activity {
 	TextView txt;
 	double distanceSelected;
 	ListOfRestaurants listOfRestaurantData;
+	double lat;
+	double lng;
 
 
 
@@ -64,8 +66,8 @@ public class MainWebActivity extends Activity {
 			Geocoder geocoder;
 			String bestProvider;
 			List<Address> user = null;
-			double lat;
-			double lng;
+//			double lat;
+//			double lng;
 			LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 			Criteria criteria = new Criteria();
 			bestProvider = lm.getBestProvider(criteria, false);
@@ -170,7 +172,7 @@ public class MainWebActivity extends Activity {
 	//be SUPER CAREFUL with calling this. Everything should exist, but this is a hacky way to do it
 	private void updateDisplay(ListOfRestaurants restData)
 	{
-		List<RestaurantData> restaurants = restData.restaurants;
+		final List<RestaurantData> restaurants = restData.restaurants;
 		Collections.sort(restaurants);
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
@@ -192,7 +194,7 @@ public class MainWebActivity extends Activity {
 		//TODO remove this limiter
 		for (int i=0; i<restaurants.size(); i++) {
 
-			final RestaurantData currentRestaurant = restaurants.get(i);
+			RestaurantData currentRestaurant = restaurants.get(i);
 			if(currentRestaurant.distance < distanceSelected) //check if the current restaurant is close enough
 			{
 				Log.d("restaurant in range", currentRestaurant.name);
@@ -229,7 +231,8 @@ public class MainWebActivity extends Activity {
 						@Override
 						public void onClick(View v) {
 							Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
+							//TODO finish fixing final issues with restaurant list
+							toPage.putExtra("data", restaurants.get(i)); //send RestaurantData object to next activity
 							toPage.putExtra("tester", "message");
 							startActivity(toPage);
 							//this section is not broken
@@ -402,7 +405,7 @@ public class MainWebActivity extends Activity {
 //	}
 	
 	public void goToMapMain(View v) {
-		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,-72.60040283203125 (Maninagar)");
+		Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=restaurant&z=20");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 	}
