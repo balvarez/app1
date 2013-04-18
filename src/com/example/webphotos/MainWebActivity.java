@@ -7,6 +7,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -14,12 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.R.color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,17 +27,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.provider.Settings.Secure;
 import android.support.v4.util.LruCache;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -179,6 +171,7 @@ public class MainWebActivity extends Activity {
 	private void updateDisplay(ListOfRestaurants restData)
 	{
 		List<RestaurantData> restaurants = restData.restaurants;
+		Collections.sort(restaurants);
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
 		ScrollView nearbyRestaurants = (ScrollView)findViewById(R.id.nearbyRestaurants);
