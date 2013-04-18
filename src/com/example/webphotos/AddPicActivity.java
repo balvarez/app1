@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddPicActivity extends Activity {
 	//could fairly simply allow for phones without a camera to use the app but not a priority
@@ -50,15 +51,15 @@ public class AddPicActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_pic);
-		if (intent.hasExtra("restaurant")) {setRest((RestaurantData) intent.getSerializableExtra("restaurant"));}
+		preview = (ImageView)findViewById(R.id.newPhoto);
+		restName = (TextView)findViewById(R.id.addPicRestName);
+		if (intent.hasExtra("restaurant")) {Log.d("poop", "restaurant made it");setRest((RestaurantData) intent.getSerializableExtra("restaurant"));}
 		else {
 			restList = (ListOfRestaurants) intent.getSerializableExtra("restaurantList");
 			DialogFragment picker = new RestaurantSelectDialog();
 			picker.show(getFragmentManager(), "restPicker");
 			Log.d("dialog", "where my dialog at");
 		}
-		preview = (ImageView)findViewById(R.id.newPhoto);
-		restName = (TextView)findViewById(R.id.addPicRestName);
 		try {
 			createImageFile();
 		} catch (IOException e) {
@@ -66,10 +67,9 @@ public class AddPicActivity extends Activity {
 			e.printStackTrace();
 		}
 		dispatchTakePictureIntent(pictureActionCode);
-		restName.setText("bloop");
+		restName.setText(restaurant.name);
 		restName.setTextColor(Color.parseColor("#D60000"));
 		restName.setTextSize(20);
-		preview.setImageDrawable(getResources().getDrawable(R.drawable.burger));
 	}
 	
 	@Override
@@ -134,9 +134,11 @@ public class AddPicActivity extends Activity {
 		}
 	}
 	
-	private void submitButton(View v) {
+	public void submitButton(View v) {
 		//sendToServer();
 		Intent home = new Intent(AddPicActivity.this, MainWebActivity.class);
+		Toast thanks = Toast.makeText(v.getContext(), "Thanks for submitting!", Toast.LENGTH_SHORT);
+		thanks.show();
 		startActivity(home);
 	}
 	

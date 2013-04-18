@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GalleryActivity extends Activity {
-	RestaurantData restaurant;
+	static RestaurantData restaurant;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class GalleryActivity extends Activity {
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
 		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
+		Log.d("rating", "restaurant rating: "+restaurant.rating);
 		stars.setProgress((int)restaurant.rating);
 
 		//setup for the cache

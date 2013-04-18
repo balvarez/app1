@@ -42,27 +42,18 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true" >
-        
-        <TextView 
+
+        <TextView
             android:id="@+id/picSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="submitButton"
             android:text="Submit Photo"
             android:textColor="#D60000"
-            android:textSize="30sp"
-            android:clickable="true"
-            android:onClick="submitButton"/>
-        
-        <ImageView
-            android:id="@+id/changePic"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/camera"
-            android:clickable="true"
-            android:onClick="newPic" />        
+            android:textSize="30sp" />
         
     </RelativeLayout>
 

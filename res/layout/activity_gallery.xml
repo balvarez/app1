@@ -20,6 +20,7 @@
             android:id="@+id/galRestRating"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
             style="@style/foodRatingBar"
             android:numStars="5"/>
         

@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -52,9 +53,10 @@ public class MainWebActivity extends Activity {
 	SeekBar seekbar;
 	TextView txt;
 	double distanceSelected;
-	ListOfRestaurants listOfRestaurantData;
+	static ListOfRestaurants listOfRestaurantData;
 	double lat;
 	double lng;
+	Context context = this;
 
 
 
@@ -107,8 +109,15 @@ public class MainWebActivity extends Activity {
 
 
 	private class RestaurantInfoTask extends AsyncTask<String, Void, String> {
+		
+		private ProgressDialog dialog;
 
-		public RestaurantInfoTask() {}
+		public RestaurantInfoTask() {dialog = new ProgressDialog(context);}
+
+	    protected void onPreExecute() {
+	        this.dialog.setMessage("Getting restaurant information...");
+	        this.dialog.show();
+	    }
 
 		@Override
 		protected String doInBackground(String... arg0) {
@@ -160,19 +169,20 @@ public class MainWebActivity extends Activity {
 					Log.v("printJSON", data.toString());
 				}
 				listOfRestaurantData = restData;
-				updateDisplay(listOfRestaurantData);
+//				updateDisplay(listOfRestaurantData);
 			}
 			catch (JSONException e)
 			{
 				e.printStackTrace();
 			}
+			if (dialog.isShowing()) dialog.dismiss();
 		}
 	}
 	
 	//be SUPER CAREFUL with calling this. Everything should exist, but this is a hacky way to do it
 	private void updateDisplay(ListOfRestaurants restData)
 	{
-		final List<RestaurantData> restaurants = restData.restaurants;
+		List<RestaurantData> restaurants = restData.restaurants;
 		Collections.sort(restaurants);
 
 		//vertical scroll in layout containing a vertical linearlayout containing the restaurant scrolls
@@ -194,7 +204,7 @@ public class MainWebActivity extends Activity {
 		//TODO remove this limiter
 		for (int i=0; i<restaurants.size(); i++) {
 
-			RestaurantData currentRestaurant = restaurants.get(i);
+			final RestaurantData currentRestaurant = restaurants.get(i);
 			if(currentRestaurant.distance < distanceSelected) //check if the current restaurant is close enough
 			{
 				Log.d("restaurant in range", currentRestaurant.name);
@@ -231,8 +241,7 @@ public class MainWebActivity extends Activity {
 						@Override
 						public void onClick(View v) {
 							Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-							//TODO finish fixing final issues with restaurant list
-							toPage.putExtra("data", restaurants.get(i)); //send RestaurantData object to next activity
+							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
 							toPage.putExtra("tester", "message");
 							startActivity(toPage);
 							//this section is not broken
@@ -276,6 +285,15 @@ public class MainWebActivity extends Activity {
 		Resources res = getResources();
 		ImageView banner = (ImageView)findViewById(R.id.bannerSpace);
 		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
+		
+		try{
+			String URL = getURL(8*1609); //start getting the URL. takes distance in meters
+			new RestaurantInfoTask().execute(URL);
+		}
+		catch(NoLocationException e)
+		{
+			Toast.makeText(this,"Error getting the current location, please try again shortly",Toast.LENGTH_LONG).show();
+		}
 
 		//listen to the distance slider
 		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
@@ -305,15 +323,6 @@ public class MainWebActivity extends Activity {
 			}
 		});
 		seekbar.incrementProgressBy(1);
-		try{
-			String URL = getURL(8*1609); //start getting the URL. takes distance in meters
-			new RestaurantInfoTask().execute(URL);
-		}
-		catch(NoLocationException e)
-		{
-			Toast.makeText(this,"Error getting the current location, please try again shortly",Toast.LENGTH_LONG).show();
-		}
-
 	}
 
 	//cache methods
