@@ -49,9 +49,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainWebActivity extends Activity {
-	private String currentLocation = "";
 	SeekBar seekbar;
 	TextView txt;
+	double distanceSelected;
 	ListOfRestaurants listOfRestaurantData;
 
 
@@ -158,7 +158,7 @@ public class MainWebActivity extends Activity {
 					Log.v("printJSON", data.toString());
 				}
 				listOfRestaurantData = restData;
-				updateDisplay(restData);
+				updateDisplay(listOfRestaurantData);
 			}
 			catch (JSONException e)
 			{
@@ -183,17 +183,6 @@ public class MainWebActivity extends Activity {
 		nearbyRestaurants.removeAllViews();
 		nearbyRestaurants.addView(restaurantsFrame);
 
-		//made each horizontalscrollview clickable instead
-//		//adding a button to test swipe view
-//		Button pressme = new Button(this);
-//		layout.addView(pressme);
-//		pressme.setOnClickListener(new Button.OnClickListener() {
-//			public void onClick(View v) {
-//				Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-//				startActivity(toPage);
-//			}
-//		});
-
 		//set up horizontal restaurant scrolls
 		final int PREVIEW_HEIGHT = 180; //height of each restaurant preview in scroll
 
@@ -201,56 +190,60 @@ public class MainWebActivity extends Activity {
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
 		RelativeLayout[] imgFramesList = new RelativeLayout[restaurants.size()];
 		//TODO remove this limiter
-		for (int i=0; i<Math.min(restaurants.size(), 5); i++) {
-			HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
-			restaurant.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT)); //set height
-			restaurantsFrame.addView(restaurant); //add scroll to scroll container
-			imgFramesList[i] = new RelativeLayout(this); //make frame for scroll
-			imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT));
-			restaurant.addView(imgFramesList[i]); //add frame to scroll
-			TextView info = new TextView(this); //make view for name/distance
-			
-			
+		for (int i=0; i<restaurants.size(); i++) {
+
 			final RestaurantData currentRestaurant = restaurants.get(i);
-			DecimalFormat twoDForm = new DecimalFormat("#.##");
-			info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
-			info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			info.setPadding(0, -4, 0, 0);
-			info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
-			imgFramesList[i].addView(info);
-			if(currentRestaurant.photos.size()==0)
+			if(currentRestaurant.distance < distanceSelected) //check if the current restaurant is close enough
 			{
-				//TODO add code to handle if there are no photos 
-			}
-			//TODO: remove this magic number (the 5 below, for max number of photos to add)
-			Resources reso = this.getResources();
-			int previousPic = 0;
-			for (int j=0; j<Math.min(currentRestaurant.photos.size(), 5); j++) {
-				ImageView fillin = new ImageView(this);
-				RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
-				if (previousPic != 0) {
-					imgParams.addRule(RelativeLayout.RIGHT_OF, previousPic);
+				Log.d("restaurant in range", currentRestaurant.name);
+				HorizontalScrollView restaurant = new HorizontalScrollView(this); //create scroll
+				restaurant.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT)); //set height
+				restaurantsFrame.addView(restaurant); //add scroll to scroll container
+				imgFramesList[i] = new RelativeLayout(this); //make frame for scroll
+				imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT));
+				restaurant.addView(imgFramesList[i]); //add frame to scroll
+				TextView info = new TextView(this); //make view for name/distance
+				
+				
+				DecimalFormat twoDForm = new DecimalFormat("#.##");
+				info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
+				info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				info.setPadding(0, -4, 0, 0);
+				info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
+				imgFramesList[i].addView(info);
+				if(currentRestaurant.photos.size()==0)
+				{
+					//TODO add code to handle if there are no photos 
 				}
-				fillin.setLayoutParams(imgParams);
-				fillin.setClickable(true);
-				fillin.setOnClickListener(new Button.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
-						toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
-						toPage.putExtra("tester", "message");
-						startActivity(toPage);
-						//this section is not broken
+				Resources reso = this.getResources();
+				int previousPic = 0;
+				for (int j=0; j<Math.min(currentRestaurant.photos.size(), 7); j++) {
+					ImageView fillin = new ImageView(this);
+					RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT);
+					if (previousPic != 0) {
+						imgParams.addRule(RelativeLayout.RIGHT_OF, previousPic);
 					}
-				});
-				imgFramesList[i].addView(fillin);
-				fillin.setImageDrawable(reso.getDrawable(R.drawable.loading));
-				new BitmapWorkerTask(fillin).execute(currentRestaurant.photos.get(j));
-				fillin.setId(1000+j);
-				previousPic = fillin.getId();
-				Log.d("id printer", "fillin id: "+previousPic);
+					fillin.setLayoutParams(imgParams);
+					fillin.setClickable(true);
+					fillin.setOnClickListener(new Button.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
+							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
+							toPage.putExtra("tester", "message");
+							startActivity(toPage);
+							//this section is not broken
+						}
+					});
+					imgFramesList[i].addView(fillin);
+					fillin.setImageDrawable(reso.getDrawable(R.drawable.loading));
+					new BitmapWorkerTask(fillin).execute(currentRestaurant.photos.get(j));
+					fillin.setId(1000+j);
+					previousPic = fillin.getId();
+					//Log.d("id printer", "fillin id: "+previousPic);
+				}
+				imgFramesList[i].bringChildToFront(info);
 			}
-			imgFramesList[i].bringChildToFront(info);
 		}
 
 		//setup for the cache
@@ -290,14 +283,7 @@ public class MainWebActivity extends Activity {
 			int slider_position;
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				try{
-					String URL = getURL(slider_position); //start getting the URL. takes distance in meters
-					new RestaurantInfoTask().execute(URL);
-				}
-				catch(NoLocationException e)
-				{
-					
-				}
+				updateDisplay(listOfRestaurantData);
 			}
 			
 			@Override
@@ -308,13 +294,22 @@ public class MainWebActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int prog, boolean fromUser) {
 				double dist = ((double)prog / 25d) - 1.98; //converts 0 to 100 into about -2 to 2
 				dist = Math.exp(dist);
+				Log.d("distance", Double.toString(distanceSelected));
 				DecimalFormat formatter = new DecimalFormat("##.#");
-				//TODO if we want to, we can convert values < 1 into feet. not priority
 				txt.setText("Set search radius: " + formatter.format(dist) + " miles");
 				slider_position = (int)(dist*1609d);
+				distanceSelected = slider_position;
 			}
 		});
 		seekbar.incrementProgressBy(1);
+		try{
+			String URL = getURL(8*1609); //start getting the URL. takes distance in meters
+			new RestaurantInfoTask().execute(URL);
+		}
+		catch(NoLocationException e)
+		{
+			Toast.makeText(this,"Error getting the current location, please try again shortly",Toast.LENGTH_LONG).show();
+		}
 
 	}
 
