@@ -24,7 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -110,12 +110,15 @@ public class MainWebActivity extends Activity {
 
 	private class RestaurantInfoTask extends AsyncTask<String, Void, String> {
 		
-		private ProgressDialog dialog;
+		private AlertDialog dialog;
 
-		public RestaurantInfoTask() {dialog = new ProgressDialog(context);}
+		public RestaurantInfoTask() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.setView(findViewById(R.layout.loading));
+			dialog = builder.create();
+			}
 
 	    protected void onPreExecute() {
-	        this.dialog.setMessage("Getting restaurant information...");
 	        this.dialog.show();
 	    }
 
