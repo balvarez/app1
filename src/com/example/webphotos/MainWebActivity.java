@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -54,8 +55,8 @@ public class MainWebActivity extends Activity {
 	TextView txt;
 	double distanceSelected;
 	static ListOfRestaurants listOfRestaurantData;
-	double lat;
-	double lng;
+	public double lat;
+	public double lng;
 	Context context = this;
 
 
@@ -63,17 +64,22 @@ public class MainWebActivity extends Activity {
 	private String getURL(int rad) throws NoLocationException {
 		String currentLocation = "";
 		final String android_id;
-		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
-		{
+//		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
+//		{
 			Geocoder geocoder;
 			String bestProvider;
 			List<Address> user = null;
 //			double lat;
 //			double lng;
 			LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+			Log.d("location", "got manager");
 			Criteria criteria = new Criteria();
+			Log.d("location","got criteria");
 			bestProvider = lm.getBestProvider(criteria, false);
+			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
+			Log.d("location","got best provider");
 			Location location = lm.getLastKnownLocation(bestProvider);
+			Log.d("location","set location");
 			
 			if (location == null){
 				Toast.makeText(this,"Location Not found, please try again shortly",Toast.LENGTH_LONG).show();
@@ -92,12 +98,12 @@ public class MainWebActivity extends Activity {
 			}
 			TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			android_id = telephonyManager1.getDeviceId();
-		}
-		else //we are in debug mode, and should return spoofed values
-		{
-			android_id = "debug";
-			currentLocation = "42.340148+-71.089268";
-		}
+//		}
+//		else //we are in debug mode, and should return spoofed values
+//		{
+//			android_id = "debug";
+//			currentLocation = "42.340148+-71.089268";
+//		}
 
 		
 		Log.d("getURL", "android ID: " + android_id);
@@ -110,15 +116,14 @@ public class MainWebActivity extends Activity {
 
 	private class RestaurantInfoTask extends AsyncTask<String, Void, String> {
 		
-		private AlertDialog dialog;
+		private ProgressDialog dialog;
 
 		public RestaurantInfoTask() {
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setView(findViewById(R.layout.loading));
-			dialog = builder.create();
+			dialog = new ProgressDialog(context);
 			}
 
 	    protected void onPreExecute() {
+	    	this.dialog.setMessage("Loading restaurant data...");
 	        this.dialog.show();
 	    }
 
@@ -245,7 +250,8 @@ public class MainWebActivity extends Activity {
 						public void onClick(View v) {
 							Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
 							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
-							toPage.putExtra("tester", "message");
+							toPage.putExtra("lat", lat);
+							toPage.putExtra("lng", lng);
 							startActivity(toPage);
 							//this section is not broken
 						}

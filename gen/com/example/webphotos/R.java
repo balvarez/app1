@@ -33,10 +33,11 @@ public final class R {
         public static final int food=0x7f020009;
         public static final int ic_launcher=0x7f02000a;
         public static final int loading=0x7f02000b;
-        public static final int ratingstars=0x7f02000c;
-        public static final int star=0x7f02000d;
-        public static final int star_empty=0x7f02000e;
-        public static final int tomap=0x7f02000f;
+        public static final int poweredbyfoursquare=0x7f02000c;
+        public static final int ratingstars=0x7f02000d;
+        public static final int star=0x7f02000e;
+        public static final int star_empty=0x7f02000f;
+        public static final int tomap=0x7f020010;
     }
     public static final class id {
         public static final int action_settings=0x7f08001d;
@@ -81,6 +82,7 @@ public final class R {
         public static final int activity_swipe_attempt2=0x7f030006;
         public static final int fragment_swipe_attempt2_dummy=0x7f030007;
         public static final int image_detail_fragment=0x7f030008;
+        public static final int loading=0x7f030009;
     }
     public static final class menu {
         public static final int add_pic=0x7f070000;
