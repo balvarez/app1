@@ -77,7 +77,7 @@ public class MainWebActivity extends Activity {
 			Log.d("location","got criteria");
 			bestProvider = lm.getBestProvider(criteria, false);
 //			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
-			Log.d("location","got best provider");
+			Log.d("location","best provider: "+bestProvider);
 			Location location = lm.getLastKnownLocation(bestProvider);
 			Log.d("location","set location");
 			
@@ -148,6 +148,8 @@ public class MainWebActivity extends Activity {
 			try {
 				JSONTokener tokener = new JSONTokener(raw);
 				JSONObject obj1 = (JSONObject) tokener.nextValue();
+//				Object obj = tokener.nextValue();
+//				JSONObject obj1 = (JSONObject) obj;
 				JSONArray keys = obj1.names();
 				ListOfRestaurants restData = new ListOfRestaurants();
 				for(int i = 0; i < keys.length(); i++)
@@ -204,7 +206,7 @@ public class MainWebActivity extends Activity {
 		nearbyRestaurants.addView(restaurantsFrame);
 
 		//set up horizontal restaurant scrolls
-		final int PREVIEW_HEIGHT = 180; //height of each restaurant preview in scroll
+		final int PREVIEW_HEIGHT = 190; //height of each restaurant preview in scroll
 
 		//need to differentiate frames. create an ArrayList array. lol
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
@@ -220,7 +222,8 @@ public class MainWebActivity extends Activity {
 				restaurant.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT)); //set height
 				restaurantsFrame.addView(restaurant); //add scroll to scroll container
 				imgFramesList[i] = new RelativeLayout(this); //make frame for scroll
-				imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT));
+				imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT-10));
+				imgFramesList[i].setPadding(0, 0, 0, -5);
 				restaurant.addView(imgFramesList[i]); //add frame to scroll
 				TextView info = new TextView(this); //make view for name/distance
 				
@@ -228,7 +231,7 @@ public class MainWebActivity extends Activity {
 				DecimalFormat twoDForm = new DecimalFormat("#.##");
 				info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
 				info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-				info.setPadding(0, -10, 0, 0);
+				info.setPadding(0, -6, 0, 5);
 				info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
 				imgFramesList[i].addView(info);
 				if(currentRestaurant.photos.size()==0)
