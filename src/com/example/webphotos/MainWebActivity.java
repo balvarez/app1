@@ -76,7 +76,7 @@ public class MainWebActivity extends Activity {
 			Criteria criteria = new Criteria();
 			Log.d("location","got criteria");
 			bestProvider = lm.getBestProvider(criteria, false);
-			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
+//			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
 			Log.d("location","got best provider");
 			Location location = lm.getLastKnownLocation(bestProvider);
 			Log.d("location","set location");
