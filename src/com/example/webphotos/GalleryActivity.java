@@ -28,12 +28,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GalleryActivity extends Activity {
-	RestaurantData restaurant;
+	static RestaurantData restaurant;
+	static double myLat;
+	static double myLng;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
 		String test = intent.getStringExtra("tester");
+		myLat = intent.getDoubleExtra("lat", 0);
+		myLng = intent.getDoubleExtra("lng", 0);
 		Log.d("intent extra", "received from main: "+test);
 		restaurant = (RestaurantData) intent.getSerializableExtra("data");
 		//pass something through the intent coming from the main activity
@@ -58,6 +62,7 @@ public class GalleryActivity extends Activity {
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
 		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
+		Log.d("rating", "restaurant rating: "+restaurant.rating);
 		stars.setProgress((int)restaurant.rating);
 
 		//setup for the cache
@@ -211,9 +216,9 @@ public class GalleryActivity extends Activity {
 	}
 
 	public void goToMapOnePin(View v) {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("maps.google.com/maps?q="+restaurant.lat+","+restaurant.lng));
-		Log.d("debuf", "intent created");
-		v.getContext().startActivity(browserIntent);
+		Uri uri = Uri.parse("geo:"+myLat+","+myLng+"?q="+restaurant.lat+","+restaurant.lng+" ("+restaurant.name+")");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
 	}
 
 }

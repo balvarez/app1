@@ -24,6 +24,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -52,24 +54,32 @@ public class MainWebActivity extends Activity {
 	SeekBar seekbar;
 	TextView txt;
 	double distanceSelected;
-	ListOfRestaurants listOfRestaurantData;
+	static ListOfRestaurants listOfRestaurantData;
+	public double lat;
+	public double lng;
+	Context context = this;
 
 
 
 	private String getURL(int rad) throws NoLocationException {
 		String currentLocation = "";
 		final String android_id;
-		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
-		{
+//		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
+//		{
 			Geocoder geocoder;
 			String bestProvider;
 			List<Address> user = null;
-			double lat;
-			double lng;
+//			double lat;
+//			double lng;
 			LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+			Log.d("location", "got manager");
 			Criteria criteria = new Criteria();
+			Log.d("location","got criteria");
 			bestProvider = lm.getBestProvider(criteria, false);
+//			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
+			Log.d("location","best provider: "+bestProvider);
 			Location location = lm.getLastKnownLocation(bestProvider);
+			Log.d("location","set location");
 			
 			if (location == null){
 				Toast.makeText(this,"Location Not found, please try again shortly",Toast.LENGTH_LONG).show();
@@ -88,12 +98,12 @@ public class MainWebActivity extends Activity {
 			}
 			TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			android_id = telephonyManager1.getDeviceId();
-		}
-		else //we are in debug mode, and should return spoofed values
-		{
-			android_id = "debug";
-			currentLocation = "42.340148+-71.089268";
-		}
+//		}
+//		else //we are in debug mode, and should return spoofed values
+//		{
+//			android_id = "debug";
+//			currentLocation = "42.340148+-71.089268";
+//		}
 
 		
 		Log.d("getURL", "android ID: " + android_id);
@@ -105,8 +115,17 @@ public class MainWebActivity extends Activity {
 
 
 	private class RestaurantInfoTask extends AsyncTask<String, Void, String> {
+		
+		private ProgressDialog dialog;
 
-		public RestaurantInfoTask() {}
+		public RestaurantInfoTask() {
+			dialog = new ProgressDialog(context);
+			}
+
+	    protected void onPreExecute() {
+	    	this.dialog.setMessage("Loading restaurant data...");
+	        this.dialog.show();
+	    }
 
 		@Override
 		protected String doInBackground(String... arg0) {
@@ -145,7 +164,7 @@ public class MainWebActivity extends Activity {
 					Log.v("JSONObject", next.getClass().toString() + ", " + next.toString());
 					obj1 = new JSONObject();
 				}
-				//JSONObject obj1 = (JSONObject) next;
+				//JSONObject obj1 = (JSONObject) tokener.nextValue();
 				JSONArray keys = obj1.names();
 				ListOfRestaurants restData = new ListOfRestaurants();
 				for(int i = 0; i < keys.length(); i++)
@@ -175,12 +194,13 @@ public class MainWebActivity extends Activity {
 					Log.v("printJSON", data.toString());
 				}
 				listOfRestaurantData = restData;
-				updateDisplay(listOfRestaurantData);
+//				updateDisplay(listOfRestaurantData);
 			}
 			catch (JSONException e)
 			{
 				e.printStackTrace();
 			}
+			if (dialog.isShowing()) dialog.dismiss();
 		}
 	}
 	
@@ -201,7 +221,7 @@ public class MainWebActivity extends Activity {
 		nearbyRestaurants.addView(restaurantsFrame);
 
 		//set up horizontal restaurant scrolls
-		final int PREVIEW_HEIGHT = 180; //height of each restaurant preview in scroll
+		final int PREVIEW_HEIGHT = 190; //height of each restaurant preview in scroll
 
 		//need to differentiate frames. create an ArrayList array. lol
 		//number of restaurants defined by testData.length. need that many copies of horizontalscrollview
@@ -217,7 +237,8 @@ public class MainWebActivity extends Activity {
 				restaurant.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT)); //set height
 				restaurantsFrame.addView(restaurant); //add scroll to scroll container
 				imgFramesList[i] = new RelativeLayout(this); //make frame for scroll
-				imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT));
+				imgFramesList[i].setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, PREVIEW_HEIGHT-10));
+				imgFramesList[i].setPadding(0, 0, 0, -5);
 				restaurant.addView(imgFramesList[i]); //add frame to scroll
 				TextView info = new TextView(this); //make view for name/distance
 				
@@ -225,12 +246,12 @@ public class MainWebActivity extends Activity {
 				DecimalFormat twoDForm = new DecimalFormat("#.##");
 				info.setText(currentRestaurant.name+"    "+twoDForm.format(currentRestaurant.distance/1609d)+" miles");
 				info.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-				info.setPadding(0, -4, 0, 0);
+				info.setPadding(0, -6, 0, 5);
 				info.setTextColor(Color.parseColor("#D60000")); //equal to 0xD60000
 				imgFramesList[i].addView(info);
 				if(currentRestaurant.photos.size()==0)
 				{
-					//TODO add code to handle if there are no photos 
+					continue; //no photos? skip the restaurant
 				}
 				Resources reso = this.getResources();
 				int previousPic = 0;
@@ -247,7 +268,8 @@ public class MainWebActivity extends Activity {
 						public void onClick(View v) {
 							Intent toPage = new Intent(MainWebActivity.this, GalleryActivity.class);
 							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
-							toPage.putExtra("tester", "message");
+							toPage.putExtra("lat", lat);
+							toPage.putExtra("lng", lng);
 							startActivity(toPage);
 							//this section is not broken
 						}
@@ -290,6 +312,15 @@ public class MainWebActivity extends Activity {
 		Resources res = getResources();
 		ImageView banner = (ImageView)findViewById(R.id.bannerSpace);
 		banner.setImageDrawable(res.getDrawable(R.drawable.csbanner));
+		
+		try{
+			String URL = getURL(8*1609); //start getting the URL. takes distance in meters
+			new RestaurantInfoTask().execute(URL);
+		}
+		catch(NoLocationException e)
+		{
+			Toast.makeText(this,"Error getting the current location, please try again shortly",Toast.LENGTH_LONG).show();
+		}
 
 		//listen to the distance slider
 		seekbar = (SeekBar)findViewById(R.id.distanceSlide);
@@ -319,15 +350,6 @@ public class MainWebActivity extends Activity {
 			}
 		});
 		seekbar.incrementProgressBy(1);
-		try{
-			String URL = getURL(8*1609); //start getting the URL. takes distance in meters
-			new RestaurantInfoTask().execute(URL);
-		}
-		catch(NoLocationException e)
-		{
-			Toast.makeText(this,"Error getting the current location, please try again shortly",Toast.LENGTH_LONG).show();
-		}
-
 	}
 
 	//cache methods
@@ -419,7 +441,7 @@ public class MainWebActivity extends Activity {
 //	}
 	
 	public void goToMapMain(View v) {
-		Uri uri = Uri.parse("geo:0,0?q=22.99948365856307,-72.60040283203125 (Maninagar)");
+		Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=restaurant&z=20");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 	}
