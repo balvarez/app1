@@ -147,9 +147,24 @@ public class MainWebActivity extends Activity {
 		protected void onPostExecute(String raw) {
 			try {
 				JSONTokener tokener = new JSONTokener(raw);
-				JSONObject obj1 = (JSONObject) tokener.nextValue();
-//				Object obj = tokener.nextValue();
-//				JSONObject obj1 = (JSONObject) obj;
+				Object next = tokener.nextValue();
+				JSONObject obj1;
+				if(next instanceof JSONObject)
+				{
+					Log.v("JSONObject", "JSONObject");
+					obj1 = (JSONObject) next;
+				}
+				else if(next instanceof String)
+				{
+					Log.v("JSONObject", "string: " + next);
+					obj1 = new JSONObject();
+				}
+				else
+				{
+					Log.v("JSONObject", next.getClass().toString() + ", " + next.toString());
+					obj1 = new JSONObject();
+				}
+				//JSONObject obj1 = (JSONObject) tokener.nextValue();
 				JSONArray keys = obj1.names();
 				ListOfRestaurants restData = new ListOfRestaurants();
 				for(int i = 0; i < keys.length(); i++)
