@@ -53,38 +53,33 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
     
-    <RelativeLayout
+    <TableLayout
         android:id="@+id/button_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="60dp" >
-
-<!--         <ImageView -->
-<!--             android:id="@+id/toggle_main" -->
-<!--             android:layout_height="match_parent" -->
-<!--             android:layout_width="60dp" -->
-<!--             android:layout_alignParentLeft="true" -->
-<!--             android:layout_alignParentTop="true" -->
-<!--             android:src="@drawable/feel" -->
-<!--             android:clickable="true" -->
-<!--             android:onClick="toggleFF" /> -->
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
         
-        <ImageView
-            android:id="@+id/add_pic_main"
-            android:layout_height="match_parent"
-            android:layout_width="60dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/camera"
-            android:clickable="true"
-            android:onClick="cameraClicked" />
-        
-        <ImageView
-            android:id="@+id/map_link_main"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:src="@drawable/tomap"
-            android:onClick="goToMapMain" />
+        <TableRow>
 
-    </RelativeLayout>
+            <ImageView
+                android:src="@drawable/powered_by_foursquare"
+                android:adjustViewBounds="true" />
+
+            <ImageView
+                android:src="@drawable/new_maps_icon"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="goToMapMain" />
+
+            <ImageView
+                android:src="@drawable/photo_icon"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="cameraClicked" />
+            </TableRow>
+
+    </TableLayout>
 
 </LinearLayout>

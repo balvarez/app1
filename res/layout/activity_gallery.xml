@@ -16,13 +16,13 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"/>
         
-        <RatingBar 
+<!--  TODO       <RatingBar 
             android:id="@+id/galRestRating"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             style="@style/foodRatingBar"
-            android:numStars="5"/>
+            android:numStars="5"/> -->
         
     </RelativeLayout>
     
@@ -31,38 +31,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     
-    <RelativeLayout
-        android:id="@+id/button_bar"
+    <TableLayout
+        android:id="@+id/button_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true" >
-
-<!--         <ImageView -->
-<!--             android:id="@+id/toggle" -->
-<!--             android:layout_height="match_parent" -->
-<!--             android:layout_width="60dp" -->
-<!--             android:layout_alignParentLeft="true" -->
-<!--             android:layout_alignParentTop="true" -->
-<!--             android:src="@drawable/feel" /> -->
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
         
-        <ImageView
-            android:id="@+id/add_pic"
-            android:layout_height="match_parent"
-            android:layout_width="60dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/camera"
-            android:clickable="true"
-            android:onClick="cameraClick" />
-        
-        <ImageView
-            android:id="@+id/map_link"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:src="@drawable/tomap"
-            android:clickable="true"
-            android:onClick="goToMapOnePin" />
+        <TableRow>
 
-    </RelativeLayout>
+            <ImageView
+                android:src="@drawable/powered_by_foursquare"
+                android:adjustViewBounds="true" />
+
+            <ImageView
+                android:src="@drawable/new_maps_icon"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="goToMapOnePin" />
+
+            <ImageView
+                android:src="@drawable/photo_icon"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="cameraClick" />
+            </TableRow>
+
+    </TableLayout>
 
 </RelativeLayout>

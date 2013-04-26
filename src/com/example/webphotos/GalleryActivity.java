@@ -61,9 +61,10 @@ public class GalleryActivity extends Activity {
 		TextView name = (TextView)findViewById(R.id.top_name);
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
-		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
-		Log.d("rating", "restaurant rating: "+restaurant.rating);
-		stars.setProgress((int)restaurant.rating);
+//		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
+//		Log.d("rating", "restaurant rating: "+restaurant.rating);
+//		stars.setProgress((int)restaurant.rating);
+		//TODO ratings
 
 		//setup for the cache
 		final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
