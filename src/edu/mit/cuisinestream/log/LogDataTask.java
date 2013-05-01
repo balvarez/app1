@@ -11,9 +11,9 @@ public class LogDataTask extends AsyncTask<LogMessage, Void, Void> {
 
 	@Override
 	protected Void doInBackground(LogMessage... params) {
-		
+		String base = "http://cuisinestream.mit.edu/cuisinestream/log.cgi";
 		try {
-			URL url = new URL(params[0].toString());
+			URL url = new URL(base + params[0].toString());
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 			while(in.readLine()!=null)
 			{

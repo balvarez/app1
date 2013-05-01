@@ -3,8 +3,6 @@ package edu.mit.cuisinestream;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
-import edu.mit.cuisinestream.AddPicActivity.RestaurantSelectDialog;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +18,15 @@ public class Map extends Activity {
 		setContentView(R.layout.activity_map);
 		setUpMapIfNeeded();
 		Intent intent = getIntent();
-		listOfRestaurantData = (ListOfRestaurants) intent.getSerializableExtra("restaurantList");
+		Log.d("map", "getting additional data");
+		try{
+			listOfRestaurantData = (ListOfRestaurants) intent.getSerializableExtra("restaurantList");
+		}
+		catch(Exception e)
+		{
+			Log.d("map", "unable to get additional data");
+			e.printStackTrace();
+		}
 		addMarkersToMap();
 	}
 
