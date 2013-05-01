@@ -1,4 +1,4 @@
-package com.example.webphotos.log;
+package edu.mit.cuisinestream.log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,11 +1,13 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.example.webphotos.log.LogDataTask;
-import com.example.webphotos.log.LogMessage;
+import com.example.webphotos.R;
+
+import edu.mit.cuisinestream.log.LogDataTask;
+import edu.mit.cuisinestream.log.LogMessage;
 
 import android.app.Activity;
 import android.content.Context;

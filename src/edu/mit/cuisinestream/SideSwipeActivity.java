@@ -1,6 +1,8 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
 
 import java.lang.ref.WeakReference;
+
+import com.example.webphotos.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.example.webphotos.log.LogDataTask;
-import com.example.webphotos.log.LogMessage;
+import com.example.webphotos.R;
+
+import edu.mit.cuisinestream.log.LogDataTask;
+import edu.mit.cuisinestream.log.LogMessage;
 
 import android.net.Uri;
 import android.os.Bundle;

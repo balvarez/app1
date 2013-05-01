@@ -1,4 +1,4 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -15,8 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.example.webphotos.log.LogDataTask;
-import com.example.webphotos.log.LogMessage;
+import com.example.webphotos.R;
+
+import edu.mit.cuisinestream.log.LogDataTask;
+import edu.mit.cuisinestream.log.LogMessage;
 
 import android.location.Address;
 import android.location.Criteria;

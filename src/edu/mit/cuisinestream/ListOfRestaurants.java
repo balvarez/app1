@@ -1,4 +1,4 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
 
 import java.io.Serializable;
 import java.util.ArrayList;

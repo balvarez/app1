@@ -1,4 +1,6 @@
-package com.example.webphotos;
+package edu.mit.cuisinestream;
+
+import com.example.webphotos.R;
 
 import android.os.Bundle;
 import android.app.Activity;
