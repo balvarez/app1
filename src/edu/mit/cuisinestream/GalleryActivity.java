@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.example.webphotos.R;
+import edu.mit.cuisinestream.R;
 
 import edu.mit.cuisinestream.log.LogDataTask;
 import edu.mit.cuisinestream.log.LogMessage;

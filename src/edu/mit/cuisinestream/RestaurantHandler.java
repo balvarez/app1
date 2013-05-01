@@ -1,6 +1,6 @@
 package edu.mit.cuisinestream;
 
-import com.example.webphotos.R;
+import edu.mit.cuisinestream.R;
 
 import android.os.Bundle;
 import android.app.Activity;

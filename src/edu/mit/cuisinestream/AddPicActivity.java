@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.example.webphotos.R;
+import edu.mit.cuisinestream.R;
 
 import edu.mit.cuisinestream.log.LogDataTask;
 import edu.mit.cuisinestream.log.LogMessage;

@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.example.webphotos.R;
+import edu.mit.cuisinestream.R;
 
 import edu.mit.cuisinestream.log.LogDataTask;
 import edu.mit.cuisinestream.log.LogMessage;
@@ -59,7 +59,7 @@ public class MainWebActivity extends Activity {
 	SeekBar seekbar;
 	TextView txt;
 	double distanceSelected;
-	static ListOfRestaurants listOfRestaurantData;
+	public static ListOfRestaurants listOfRestaurantData;
 	public double lat;
 	public double lng;
 	Context context = this;
@@ -424,8 +424,10 @@ public class MainWebActivity extends Activity {
 	
 	public void goToMapMain(View v) {
 		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.OPEN_MAP, "MAIN"));
-		Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=nearby restaurants&z=8");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		//Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=nearby restaurants&z=8");
+        //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		Intent intent = new Intent(MainWebActivity.this, Map.class);
+		intent.putExtra("restaurantList", listOfRestaurantData);
         startActivity(intent);
 	}
 

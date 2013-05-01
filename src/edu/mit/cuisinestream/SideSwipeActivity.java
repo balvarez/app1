@@ -2,7 +2,7 @@ package edu.mit.cuisinestream;
 
 import java.lang.ref.WeakReference;
 
-import com.example.webphotos.R;
+import edu.mit.cuisinestream.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
