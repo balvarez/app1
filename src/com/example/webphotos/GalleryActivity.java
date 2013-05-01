@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import com.example.webphotos.log.LogDataTask;
+import com.example.webphotos.log.LogMessage;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -179,29 +182,6 @@ public class GalleryActivity extends Activity {
 			return imageView;
 		}
 
-//		private String ff = "feel";
-//
-//		public void toggleFF(View v) {
-//			Log.d("foodFeel", "hitButton");
-//			ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
-//			if (ff.equals("feel"))
-//			{
-//				Log.d("foodFeel", "switch to food");
-//				ff = "food";
-//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-//			}
-//			else if (ff.equals("food"))
-//			{
-//				Log.d("foodFeel", "switch to feel");
-//				ff = "feel";
-//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-//			}
-//			else
-//			{
-//				Log.d("foodFeel", "wrong!");
-//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-//			}
-//		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int pos, Object obj) {
@@ -211,12 +191,14 @@ public class GalleryActivity extends Activity {
 
 	public void cameraClick(View v) {
 		Log.d("cameraclick", "add pic clicked");
+		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
 		Intent addPic = new Intent(GalleryActivity.this, AddPicActivity.class);
 		addPic.putExtra("restaurant", restaurant);
 		v.getContext().startActivity(addPic);
 	}
 
 	public void goToMapOnePin(View v) {
+		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.OPEN_MAP, restaurant.name));
 		Uri uri = Uri.parse("geo:"+myLat+","+myLng+"?q="+restaurant.lat+","+restaurant.lng+" ("+restaurant.name+")");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);

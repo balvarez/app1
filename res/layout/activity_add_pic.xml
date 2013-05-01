@@ -46,11 +46,10 @@
         
         <TableRow >
 
-        <ImageView
+        <ImageButton
             android:id="@+id/submitButton"
-            android:src="@drawable/submit_photo"
+            android:src="@drawable/selector_submit_photos"
             android:adjustViewBounds="true"
-            android:clickable="true"
             android:onClick="submitButton" />
         
         </TableRow>

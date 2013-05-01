@@ -41,20 +41,19 @@
         
         <TableRow>
 
-            <ImageView
+            <ImageButton
                 android:src="@drawable/powered_by_foursquare"
-                android:adjustViewBounds="true" />
-
-            <ImageView
-                android:src="@drawable/new_maps_icon"
                 android:adjustViewBounds="true"
-                android:clickable="true"
+                android:clickable="false"/>
+
+            <ImageButton
+                android:src="@drawable/selector_maps"
+                android:adjustViewBounds="true"
                 android:onClick="goToMapOnePin" />
 
-            <ImageView
-                android:src="@drawable/photo_icon"
+            <ImageButton
+                android:src="@drawable/selector_photos"
                 android:adjustViewBounds="true"
-                android:clickable="true"
                 android:onClick="cameraClick" />
             </TableRow>
 

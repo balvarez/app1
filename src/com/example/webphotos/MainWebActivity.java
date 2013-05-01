@@ -15,6 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.example.webphotos.log.LogDataTask;
+import com.example.webphotos.log.LogMessage;
+
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -64,17 +67,15 @@ public class MainWebActivity extends Activity {
 	private String getURL(int rad) throws NoLocationException {
 		String currentLocation = "";
 		final String android_id;
-//		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
-//		{
+		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
+		{
 			Geocoder geocoder;
 			String bestProvider;
 			List<Address> user = null;
 //			double lat;
 //			double lng;
 			LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-			Log.d("location", "got manager");
 			Criteria criteria = new Criteria();
-			Log.d("location","got criteria");
 			bestProvider = lm.getBestProvider(criteria, false);
 //			LocationManager.requestLocationUpdates(1000, 1, criteria, null);
 			Log.d("location","best provider: "+bestProvider);
@@ -98,12 +99,12 @@ public class MainWebActivity extends Activity {
 			}
 			TelephonyManager telephonyManager1 = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			android_id = telephonyManager1.getDeviceId();
-//		}
-//		else //we are in debug mode, and should return spoofed values
-//		{
-//			android_id = "debug";
-//			currentLocation = "42.340148+-71.089268";
-//		}
+		}
+		else //we are in debug mode, and should return spoofed values
+		{
+			android_id = "debug";
+			currentLocation = "42.340148+-71.089268";
+		}
 
 		
 		Log.d("getURL", "android ID: " + android_id);
@@ -194,7 +195,7 @@ public class MainWebActivity extends Activity {
 					Log.v("printJSON", data.toString());
 				}
 				listOfRestaurantData = restData;
-//				updateDisplay(listOfRestaurantData);
+				updateDisplay(listOfRestaurantData);
 			}
 			catch (JSONException e)
 			{
@@ -331,6 +332,7 @@ public class MainWebActivity extends Activity {
 			int slider_position;
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
+				new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SET_DISTANCE, distanceSelected));
 				updateDisplay(listOfRestaurantData);
 			}
 			
@@ -349,7 +351,8 @@ public class MainWebActivity extends Activity {
 				distanceSelected = slider_position;
 			}
 		});
-		seekbar.incrementProgressBy(1);
+		//initialize to a reasonable walking distance. about .7 miles
+		seekbar.incrementProgressBy(40);
 	}
 
 	//cache methods
@@ -411,37 +414,15 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void cameraClicked(View v) {
+		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, "MAIN"));
 		Intent addPhoto = new Intent(MainWebActivity.this, AddPicActivity.class);
 		addPhoto.putExtra("restaurantList", listOfRestaurantData);
 		startActivity(addPhoto);
 	}
 	
-//	private String ff = "feel";
-//	
-//	public void toggleFF(View v) {
-//		Log.d("foodFeel", "hitButton");
-//		ImageView toggle = (ImageView)findViewById(R.id.toggle_main);
-//		if (ff.equals("feel"))
-//		{
-//			Log.d("foodFeel", "switch to food");
-//			ff = "food";
-//			toggle.setImageDrawable(getResources().getDrawable(R.drawable.food));
-//		}
-//		else if (ff.equals("food"))
-//		{
-//			Log.d("foodFeel", "switch to feel");
-//			ff = "feel";
-//			toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-//		}
-//		else
-//			{
-//				Log.d("foodFeel", "wrong!");
-//				toggle.setImageDrawable(getResources().getDrawable(R.drawable.feel));
-//			}
-//	}
-	
 	public void goToMapMain(View v) {
-		Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=restaurant&z=20");
+		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.OPEN_MAP, "MAIN"));
+		Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=nearby restaurants&z=8");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 	}

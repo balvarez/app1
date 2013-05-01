@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import com.example.webphotos.log.LogDataTask;
+import com.example.webphotos.log.LogMessage;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,10 +35,9 @@ public class AddPicActivity extends Activity {
 	
 	//SO FAR this should launch the camera and come back and preview the picture taken but it doesn't preview
 	//debugging this shit is hard because of weird usb mass storage interactions
-	//usb takes over the memory so that the camera can't write to files but other usb connections don't talk to logcat
+	//USB takes over the memory so that the camera can't write to files but other usb connections don't talk to logcat
 	//something in onActivityResult isn't working but I can't debug so I have no idea what
 	//TODO upload photo and rating to server. started method sendToServer at bottom.
-	//TODO make a submit graphic to replace the toMap graphic
 	
 	static RestaurantData restaurant;
 	static ListOfRestaurants restList;
@@ -53,27 +55,37 @@ public class AddPicActivity extends Activity {
 		setContentView(R.layout.activity_add_pic);
 		preview = (ImageView)findViewById(R.id.newPhoto);
 		restName = (TextView)findViewById(R.id.addPicRestName);
-		if (intent.hasExtra("restaurant")) {Log.d("poop", "restaurant made it");setRest((RestaurantData) intent.getSerializableExtra("restaurant"));}
+		if (intent.hasExtra("restaurant"))
+		{
+			Log.d("photoDebugging", "restaurant made it");
+			setRest((RestaurantData) intent.getSerializableExtra("restaurant"));
+		}
 		else {
 			restList = (ListOfRestaurants) intent.getSerializableExtra("restaurantList");
 			DialogFragment picker = new RestaurantSelectDialog();
 			picker.show(getFragmentManager(), "restPicker");
-			Log.d("dialog", "where my dialog at");
+			Log.d("photoDebugging", "where my dialog at");
 		}
 		try {
 			createImageFile();
 		} catch (IOException e) {
+			Log.d("photoDebugging", "hit start of catch");
 			Log.d("IOException", "failed to create image file");
 			e.printStackTrace();
 		}
 		dispatchTakePictureIntent(pictureActionCode);
-		restName.setText(restaurant.name);
+		Log.d("photoDebugging", "just dispatched, about to set GUI info");
+		//TODO this is causing an error. We need to instantiate restaurant first
+		//restName.setText(restaurant.name);
+		restName.setText("placeholder name");
 		restName.setTextColor(Color.parseColor("#D60000"));
 		restName.setTextSize(20);
+		Log.d("photoDebugging", "finished setting GUI info");
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("photoDebugging", "entered onActivityResult");
 		//Check receiving correct intent
 		if (requestCode == pictureActionCode) {
 			//Check for successful request
@@ -88,6 +100,7 @@ public class AddPicActivity extends Activity {
 	}
 	
 	private void dispatchTakePictureIntent(int actionCode) {
+		Log.d("photoDebugging", "entered dispatchTakePictureIntent");
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File picFile = new File(currentPhotoPath);
 		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picFile));
@@ -95,16 +108,20 @@ public class AddPicActivity extends Activity {
 	}
 	
 	private File createImageFile() throws IOException {
+		Log.d("photoDebugging", "entered createImageFile");
 		// Create a unique image file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
 		String imageFileName = "cs" + timeStamp + "_";
 //		File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "CuisineStream");
 		File image = File.createTempFile(imageFileName, ".jpg", this.getCacheDir());
-		currentPhotoPath = image.getAbsolutePath();
+		//currentPhotoPath = image.getAbsolutePath();
+		currentPhotoPath = image.getCanonicalPath();
+		Log.d("photoDebugging", currentPhotoPath);
 		return image;
 	}
 	
 	private void galleryAddPic() {
+		Log.d("photoDebugging", "entered galleryAddPic");
 		//I think this just makes the picture available in the gallery behind the scenes
 		Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 		File f = new File(currentPhotoPath);
@@ -116,6 +133,7 @@ public class AddPicActivity extends Activity {
 	public static class RestaurantSelectDialog extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			Log.d("photoDebugging", "entered RestaurantSelectDialog.onCreateDialog");
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle("Select Restaurant");
 			final RestaurantData[] fullList = restList.getRestaurantArray();
@@ -134,7 +152,9 @@ public class AddPicActivity extends Activity {
 		}
 	}
 	
-	public void submitButton(View v) {
+	private void submitButton(View v) {
+		Log.d("photoDebugging", "entered submitButton");
+		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
 		//sendToServer();
 		Intent home = new Intent(AddPicActivity.this, MainWebActivity.class);
 		Toast thanks = Toast.makeText(v.getContext(), "Thanks for submitting!", Toast.LENGTH_SHORT);
@@ -143,14 +163,18 @@ public class AddPicActivity extends Activity {
 	}
 	
 	private void sendToServer() {
+		Log.d("photoDebugging", "entered sendToServer");
 		double rating = stars.getRating();
 		String name = restaurant.name;
 		String location = Double.toString(restaurant.lat) + "+" + Double.toString(restaurant.lng);
 		String id = restaurant.id;
-		
 	}
 	
-	public static void setRest(RestaurantData rest) {restaurant = rest; restName.setText(restaurant.name);}
+	public static void setRest(RestaurantData rest)
+	{
+		restaurant = rest;
+		restName.setText(restaurant.name);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,5 +182,4 @@ public class AddPicActivity extends Activity {
 		getMenuInflater().inflate(R.menu.add_pic, menu);
 		return true;
 	}
-
 }
