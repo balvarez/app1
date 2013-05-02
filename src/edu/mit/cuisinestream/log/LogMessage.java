@@ -16,7 +16,7 @@ public class LogMessage {
 	//open map from main or gallery
 	public LogMessage(typeOfLog type, String data)
 	{
-		URLsuffix = "?type=" + type.toString() + "&source=" + data;
+		URLsuffix = "?type=" + type.toString() + "&source=" + Uri.encode(data);
 	}
 	
 	//for slider updates

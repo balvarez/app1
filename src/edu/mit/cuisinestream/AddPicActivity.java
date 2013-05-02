@@ -23,11 +23,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +60,10 @@ public class AddPicActivity extends Activity {
 		setContentView(R.layout.activity_add_pic);
 		preview = (ImageView)findViewById(R.id.newPhoto);
 		restName = (TextView)findViewById(R.id.addPicRestName);
+		stars = (RatingBar)findViewById(R.id.restRating);
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int w = metrics.widthPixels;
 		if (intent.hasExtra("restaurant"))
 		{
 			Log.d("photoDebugging", "restaurant made it");
@@ -79,9 +86,10 @@ public class AddPicActivity extends Activity {
 		Log.d("photoDebugging", "just dispatched, about to set GUI info");
 		//TODO this is causing an error. We need to instantiate restaurant first
 		//restName.setText(restaurant.name);
-		restName.setText("placeholder name");
+//		restName.setText("placeholder name");
+		restName.setTextAppearance(this, android.R.style.TextAppearance_Large);
 		restName.setTextColor(Color.parseColor("#D60000"));
-		restName.setTextSize(20);
+//		restName.setTextSize(20);
 		Log.d("photoDebugging", "finished setting GUI info");
 	}
 	
@@ -154,7 +162,7 @@ public class AddPicActivity extends Activity {
 		}
 	}
 	
-	private void submitButton(View v) {
+	public void submit(View v) {
 		Log.d("photoDebugging", "entered submitButton");
 		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
 		//sendToServer();
@@ -164,7 +172,7 @@ public class AddPicActivity extends Activity {
 		startActivity(home);
 	}
 	
-	private void sendToServer() {
+	public void sendToServer() {
 		Log.d("photoDebugging", "entered sendToServer");
 		double rating = stars.getRating();
 		String name = restaurant.name;

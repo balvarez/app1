@@ -34,7 +34,7 @@ public class Map extends Activity {
 		else
 		{
 			Log.d("map", "should be adding markers now");
-			//addMarkersToMap();
+			addMarkersToMap();
 		}
 	}
 
@@ -47,10 +47,15 @@ public class Map extends Activity {
 	
 	private void addMarkersToMap()
 	{
-		mMap.clear();
-		for(RestaurantData restaurant : listOfRestaurantData.restaurants)
+		if(listOfRestaurantData.restaurants.size()!=0)
 		{
-			mMap.addMarker(new MarkerOptions().position(new LatLng(restaurant.lat, restaurant.lng)).title(restaurant.name));
+			mMap.clear();
+			LatLng initialPoint = new LatLng(listOfRestaurantData.restaurants.get(0).lat, listOfRestaurantData.restaurants.get(0).lng);
+			for(RestaurantData restaurant : listOfRestaurantData.restaurants)
+			{
+				mMap.addMarker(new MarkerOptions().position(new LatLng(restaurant.lat, restaurant.lng)).title(restaurant.name));
+			}
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initialPoint, 15));
 		}
 	}
 	

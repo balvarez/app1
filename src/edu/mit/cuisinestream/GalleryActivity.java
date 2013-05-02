@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,6 +67,7 @@ public class GalleryActivity extends Activity {
 		TextView name = (TextView)findViewById(R.id.top_name);
 		name.setText(restaurant.name);
 		name.setTextAppearance(this, android.R.style.TextAppearance_Large);
+		name.setTextColor(Color.parseColor("#D60000"));
 //		RatingBar stars = (RatingBar)findViewById(R.id.galRestRating);
 //		Log.d("rating", "restaurant rating: "+restaurant.rating);
 //		stars.setProgress((int)restaurant.rating);

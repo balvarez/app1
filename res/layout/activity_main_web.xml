@@ -66,16 +66,22 @@
             <ImageButton
                 android:src="@drawable/powered_by_foursquare"
                 android:adjustViewBounds="true"
+                android:background="@null"
+                android:scaleType="fitCenter"
                 android:clickable="false" />
 
             <ImageButton
                 android:src="@drawable/selector_maps"
                 android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@null"
                 android:onClick="goToMapMain" />
 
             <ImageButton
                 android:src="@drawable/selector_photos"
                 android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@null"
                 android:onClick="cameraClicked" />
             </TableRow>
 

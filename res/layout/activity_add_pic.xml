@@ -4,56 +4,56 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context=".AddPicActivity" >
-    
+
     <ImageView
         android:id="@+id/picActivityBanner"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:src="@drawable/csbanner"/>
-    
+        android:src="@drawable/csbanner" />
+
     <LinearLayout
         android:id="@+id/infoHolder"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@id/picActivityBanner" >
-        
+        android:layout_height="wrap_content"
+        android:layout_below="@id/picActivityBanner"
+        android:orientation="vertical" >
+
         <TextView
             android:id="@+id/addPicRestName"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-        
-        <RatingBar 
+            android:layout_height="wrap_content" />
+
+        <RatingBar
             android:id="@+id/restRating"
+            style="@style/foodRatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/foodRatingBar"
-            android:numStars="5"/>
-        
+            android:numStars="5" />
     </LinearLayout>
-        
+
     <ImageView
         android:id="@+id/newPhoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoHolder" />
-    
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:shrinkColumns="*"
-        android:stretchColumns="*"
-        android:layout_alignParentBottom="true" >
-        
-        <TableRow >
+        android:stretchColumns="*" >
 
-        <ImageButton
-            android:id="@+id/submitButton"
-            android:src="@drawable/selector_submit_photos"
-            android:adjustViewBounds="true"
-            android:onClick="submitButton" />
-        
+        <TableRow>
+
+            <ImageButton
+                android:id="@+id/submitButton"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                android:onClick="submit"
+                android:scaleType="fitCenter"
+                android:src="@drawable/selector_submit_photos" />
         </TableRow>
-        
     </TableLayout>
 
 </RelativeLayout>
