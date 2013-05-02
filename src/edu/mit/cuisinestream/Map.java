@@ -14,20 +14,27 @@ public class Map extends Activity {
 	private GoogleMap mMap;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Intent intent = getIntent();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-		setUpMapIfNeeded();
-		Intent intent = getIntent();
 		Log.d("map", "getting additional data");
 		try{
-			listOfRestaurantData = (ListOfRestaurants) intent.getSerializableExtra("restaurantList");
+			listOfRestaurantData = (ListOfRestaurants)intent.getSerializableExtra("restaurantList");
 		}
 		catch(Exception e)
 		{
 			Log.d("map", "unable to get additional data");
 			e.printStackTrace();
 		}
-		addMarkersToMap();
+		setUpMapIfNeeded();
+		if(listOfRestaurantData == null)
+		{
+			Log.d("map", "got null list of restaurants");
+		}
+		else
+		{
+			addMarkersToMap();
+		}
 	}
 
 	@Override
@@ -49,6 +56,7 @@ public class Map extends Activity {
 	private void setUpMapIfNeeded() {
 	    // Do a null check to confirm that we have not already instantiated the map.
 	    if (mMap == null) {
+	    	Log.d("fragment", getFragmentManager().findFragmentById(R.id.map).toString());
 	        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 	                            .getMap();
 	        // Check if we were successful in obtaining the map.
