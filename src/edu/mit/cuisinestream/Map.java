@@ -33,7 +33,8 @@ public class Map extends Activity {
 		}
 		else
 		{
-			addMarkersToMap();
+			Log.d("map", "should be adding markers now");
+			//addMarkersToMap();
 		}
 	}
 
