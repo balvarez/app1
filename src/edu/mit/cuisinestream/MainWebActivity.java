@@ -63,12 +63,12 @@ public class MainWebActivity extends Activity {
 	public double lat;
 	public double lng;
 	Context context = this;
+	String android_id;
 
 
 
 	private String getURL(int rad) throws NoLocationException {
 		String currentLocation = "";
-		final String android_id;
 		if(0==(getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))//not debug mode
 		{
 			Geocoder geocoder;
@@ -273,6 +273,7 @@ public class MainWebActivity extends Activity {
 							toPage.putExtra("data", currentRestaurant); //send RestaurantData object to next activity
 							toPage.putExtra("lat", lat);
 							toPage.putExtra("lng", lng);
+							toPage.putExtra("user", android_id);
 							startActivity(toPage);
 							//this section is not broken
 						}
@@ -334,7 +335,7 @@ public class MainWebActivity extends Activity {
 			int slider_position;
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SET_DISTANCE, distanceSelected));
+				new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.SET_DISTANCE, distanceSelected));
 				updateDisplay(listOfRestaurantData);
 			}
 			
@@ -416,14 +417,15 @@ public class MainWebActivity extends Activity {
 	}
 	
 	public void cameraClicked(View v) {
-		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, "MAIN"));
+		new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.SUBMIT_PHOTO, "MAIN"));
 		Intent addPhoto = new Intent(MainWebActivity.this, AddPicActivity.class);
 		addPhoto.putExtra("restaurantList", listOfRestaurantData);
+		addPhoto.putExtra("user", android_id);
 		startActivity(addPhoto);
 	}
 	
 	public void goToMapMain(View v) {
-		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.OPEN_MAP, "MAIN"));
+		new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.OPEN_MAP, "MAIN"));
 		//Uri uri = Uri.parse("geo:"+lat+","+lng+"?q=nearby restaurants&z=8");
         //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		Intent intent = new Intent(MainWebActivity.this, Map.class);

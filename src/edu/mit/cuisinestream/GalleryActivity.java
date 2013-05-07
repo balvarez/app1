@@ -37,6 +37,7 @@ public class GalleryActivity extends Activity {
 	static RestaurantData restaurant;
 	static double myLat;
 	static double myLng;
+	String android_id;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class GalleryActivity extends Activity {
 		String test = intent.getStringExtra("tester");
 		myLat = intent.getDoubleExtra("lat", 0);
 		myLng = intent.getDoubleExtra("lng", 0);
+		android_id = intent.getStringExtra("user");
 		Log.d("intent extra", "received from main: "+test);
 		restaurant = (RestaurantData) intent.getSerializableExtra("data");
 		//pass something through the intent coming from the main activity
@@ -195,14 +197,14 @@ public class GalleryActivity extends Activity {
 
 	public void cameraClick(View v) {
 		Log.d("cameraclick", "add pic clicked");
-		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
+		new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
 		Intent addPic = new Intent(GalleryActivity.this, AddPicActivity.class);
 		addPic.putExtra("restaurant", restaurant);
 		v.getContext().startActivity(addPic);
 	}
 
 	public void goToMapOnePin(View v) {
-		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.OPEN_MAP, restaurant.name));
+		new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.OPEN_MAP, restaurant.name));
 		Uri uri = Uri.parse("geo:"+myLat+","+myLng+"?q="+restaurant.lat+","+restaurant.lng+" ("+restaurant.name+")");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);

@@ -51,6 +51,7 @@ public class AddPicActivity extends Activity {
 	ImageView preview;
 	static TextView restName;
 	RatingBar stars;
+	String android_id;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class AddPicActivity extends Activity {
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int w = metrics.widthPixels;
+		android_id = intent.getStringExtra("user");
 		if (intent.hasExtra("restaurant"))
 		{
 			Log.d("photoDebugging", "restaurant made it");
@@ -164,7 +166,7 @@ public class AddPicActivity extends Activity {
 	
 	public void submit(View v) {
 		Log.d("photoDebugging", "entered submitButton");
-		new LogDataTask().execute(new LogMessage(LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
+		new LogDataTask().execute(new LogMessage(android_id, LogMessage.typeOfLog.SUBMIT_PHOTO, restaurant.name));
 		//sendToServer();
 		Intent home = new Intent(AddPicActivity.this, MainWebActivity.class);
 		Toast thanks = Toast.makeText(v.getContext(), "Thanks for submitting!", Toast.LENGTH_SHORT);

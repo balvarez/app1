@@ -14,17 +14,17 @@ public class LogMessage {
 	
 	//go to gallery for restaurant
 	//open map from main or gallery
-	public LogMessage(typeOfLog type, String data)
+	public LogMessage(String user, typeOfLog type, String data)
 	{
-		URLsuffix = "?type=" + type.toString() + "&source=" + Uri.encode(data);
+		URLsuffix = "?user=" + Uri.encode(user) + "&type=" + type.toString() + "&source=" + Uri.encode(data);
 	}
 	
 	//for slider updates
-	public LogMessage(typeOfLog type, double dist)
+	public LogMessage(String user, typeOfLog type, double dist)
 	{
 		if (type == typeOfLog.SET_DISTANCE)
 		{
-			URLsuffix = "?type=SET_DISTANCE&source=" + Uri.encode(String.valueOf(dist));
+			URLsuffix = "?user=" + Uri.encode(user) + "&type=SET_DISTANCE&source=" + Uri.encode(String.valueOf(dist));
 		}
 		else {
 			throw new IllegalArgumentException("this enum does not corrispond to this constructor");
